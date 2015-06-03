@@ -1,0 +1,16 @@
+{
+  "name": "tabular-data",
+  "version": "0.0.1",
+  "private": false,
+  "description": "Dynamic form example using AngularJS",
+  "homepage": "https://github.com/levexis/tabular-data",
+  "authors": [
+    "Paul Cook <levexis@gmail.com>"
+  ],
+  "dependencies": {
+    "angular": "latest"
+  },
+  "devDependencies": {
+    "angular-mocks": "latest"
+  }
+}

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Tabular Data</title>
+
+    <link href="css/app.css" rel="stylesheet">
+    <script src="js/vendor/angular.js"></script>
+
+    <!-- your app's script -->
+    <script src="js/app.js"></script>
+    <script src="js/controllers.js"></script>
+    <script src="js/directives.js"></script>
+  </head>
+
+  <body ng-app="tabData">
+        <!-- do we want a method to populate the table with test data? -->
+        <div ng-controller="MainCtrl" class="main">
+            <h1>Tabular Data Example</h1>
+            <div ng-form='addForm'>
+                <label for="fullname">Your Name: </label>
+                <input type="text" placeholder="Full name" ng-model="model.name" id="fullname" required />
+                <br />
+                <label for="fullname">Date of Birth: </label>
+                <td-date ng-model="model.dob"></td-date>
+                <br />
+                <!-- todo: validation will fail on ie as type email not supported -->
+                <label for="email">Your Email: </label>
+                    <input type="email" placeholder="Email" ng-model="model.email" id="email" required />
+                </label>
+                <br />
+                <label for="kids">Number Kids: </label>
+                <input type="number" placeholder="Number of kids" ng-model="model.kids" id="kids" required />
+                <br />
+                <label for="add"></label>
+                <button ng-disabled="!addForm.$valid" ng-click="addModel()" class="add-button" id="add">add</button>
+            </div>
+            <td-tabulate collection="collection" col0="name" col1="dob" col2="email" col3="kids"></td-tabulate><!-- tabulates data and sorts by first column ascending -->
+        </div>
+  </body>
+</html>

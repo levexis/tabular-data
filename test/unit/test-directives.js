@@ -34,11 +34,31 @@ describe( 'directives', function () {
                 expect( iscope.fullYear( 50 ) ).to.equal( 1950 );
                 expect( iscope.fullYear( new Date().getYear() + 1900 - 2000 ) ).to.equal( new Date().getYear() + 1900 );
                 expect( iscope.fullYear( new Date().getYear() + 1900 - 2000 + 1 ) ).to.equal( new Date().getYear() + 1900 - 99 );
-            } )
+            } );
+            it('should start with blank day,month,year',function () {
+                expect( iscope.day).to.be.undefined;
+                expect( iscope.month).to.be.undefined;
+                expect( iscope.year).to.be.undefined;
+            } );
+            it('should reset day,month,year when model is reset',function () {
+                iscope.day = iscope.month = iscope.year =1;
+                iscope.updateModel();
+                expect( scope.test.date).to.deep.equal( new Date (2001,0,1) ) ;
+                scope.test.date=undefined;
+                scope.$digest();
+                expect( iscope.day).to.be.undefined;
+                expect( iscope.month).to.be.undefined;
+                expect( iscope.year).to.be.undefined;
+            } );
+
+            it('should set day,month,year if model set to a date');//todo: not implemented yet
+
         } );
     } );
     describe( 'tdTabulate', function () {
+        var _compile
         beforeEach( inject( function ( $rootScope, $compile ) {
+            _compile = $compile;
             elm = angular.element( '<div><td-tabulate collection="testdata" col0="test_col" col1="next_col"></td-tabulate></div>' );
             scope = $rootScope.$new();
             scope.testdata = [
@@ -46,6 +66,7 @@ describe( 'directives', function () {
                 {test_col : 'three', next_col : 'four' }
             ];
             elm = $compile( elm )( scope );
+            scope.$digest();
             iscope = elm.find( 'td-tabulate' ).isolateScope();
         } ) );
         it( 'should populate collection with testdata', function () {
@@ -54,8 +75,29 @@ describe( 'directives', function () {
         } );
         it( 'should have a filter box', function () {
             elm.html().should.contain( '<input' );
-            elm.scope().search = 'u';
         } );
+        it( 'should display 2 rows', function () {
+            iscope.search = undefined;
+            iscope.$digest();
+            elm.html().should.contain( 'name="row0"' );
+            elm.html().should.contain( 'name="row1"' );
+            elm.html().should.contain( 'three' );
+            elm.html().should.not.contain( 'name="row2"' );
+        });
+        it( 'should filter on search value',function () {
+            iscope.search = 'one';
+            iscope.$digest();
+            elm.html().should.contain( 'name="row0"' );
+            elm.html().should.not.contain( 'name="row1"' );
+            elm.html().should.not.contain( 'three' );
+        });
+        it( 'should show order and direction',function () {
+            var p = elm.find('p');
+            p.html().should.contain( 'test_col Ascending' );
+            iscope.clickCol(0);
+            iscope.$digest();
+            p.html().should.contain( 'test_col Descending' );
+        });
         describe( 'methods', function () {
             it( 'should have clickCol method', function () {
                 expect( iscope.clickCol ).to.be.a( 'function' );
@@ -92,7 +134,6 @@ describe( 'filters', function () {
                 filter = $injector.get( '$filter' )( 'tdFilterValues' );
             } );
         } );
-
         it( 'should return all values if no input', function () {
             expect( filter( testData ) ).to.deep.equal( testData );
         } );

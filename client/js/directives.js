@@ -66,8 +66,8 @@ angular.module( 'tabData' )
             },
             template : function ( element, attributes ) {
                 var cols = 0,
-                    startTemplate = '<div class="tabulate" ng-show="collection.length"><label>Filter:</label><input ng-model="search" placeholder="Enter text to filter" required/><br /><table class="table"><thead><tr>',
-                    endTemplate = '<tbody><tr ng-class-even="\'even\'" ng-repeat="row in collection | tdFilterValues:search | orderBy:sortName:desc">';
+                    startTemplate = '<div class="tabulate" ng-show="collection.length"><label>Filter:</label><input ng-model="search" placeholder="Enter text to filter" required/><br /><table class="table"><thead><tr name="headings">',
+                    endTemplate = '<tbody><tr ng-class-even="\'even\'" ng-repeat="row in collection | tdFilterValues:search | orderBy:sortName:desc" name="row{{$index}}">';
 
                 while ( attributes['col' + cols] && cols < 10 ) {
                     startTemplate += '<td ng-click="clickCol(' + cols + ')" ng-class="{ \'asc\' : sort===' + cols + ' && !desc, \'desc\' :  sort===' + cols + ' && desc}">' + attributes['col' + cols ] + '</td>';
@@ -107,6 +107,7 @@ angular.module( 'tabData' )
                     keys = Object.keys( row );
                     i = 0;
                     found = false;
+                    // appending matching rows to out and check next
                     while ( !found && i < keys.length ) {
                         if ( keys[i].substr( 0, 1 ) !== '$' &&
                             typeof row[ keys[i] ] === 'string' &&

@@ -10,12 +10,14 @@ module.exports = function(config) {
 
         files : [
             'lib/angular/angular.js',
-            'www/js/**/*.js',
+            'client/js/**/*.js',
+            'lib/angular-mocks/angular-mocks.js',
             'test/unit/**/*.js'
         ],
 
         exclude: [
-              'www/js/vendor/*.js'
+            'js/scripts/vendor/**/*.js'
+//            'app/lib/angular/angular-scenario.js'
         ],
 
         // test results reporter to use
@@ -53,11 +55,7 @@ module.exports = function(config) {
         singleRun: true,
 
         preprocessors : {
-            '**/angular/scripts/controllers/*.js' : 'coverage',
-            '**/angular/scripts/*.js' : 'coverage',
-            '**/angular/directives/*.js' : 'coverage',
-            '**/angular/filters/*.js' : 'coverage',
-            '**/angular/services/*.js' : 'coverage'
+            '**/client/js/*.js' : 'coverage'
         },
 
         htmlReporter: {

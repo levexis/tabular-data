@@ -3,7 +3,7 @@
 //team    248dcb1a3e396b99e50c047c5424913a_NDI3NjU1MjAxNC0wOS0wMiAwNTowOToxNy45MDMzMzc
 //ipa distribute:testflight -a 97fea4a9ffaa8bb7a22f21a18b5e31e5_MjAzMjk1NTIwMTQtMDgtMTEgMTc6MDE6MzUuODMyNTg4 -T 248dcb1a3e396b99e50c047c5424913a_NDI3NjU1MjAxNC0wOS0wMiAwNTowOToxNy45MDMzMzc
 module.exports = function (grunt) {
-    "use strict";
+    'use strict';
 
     grunt.initConfig( {
         pkg : grunt.file.readJSON( 'package.json' ),
@@ -28,7 +28,7 @@ module.exports = function (grunt) {
         copy : {
             main : {
                 files : [
-                    {expand : true, flatten : true, cwd : 'lib/angular/', src : '*.js*', dest : 'client/scripts/vendor/' }
+                    {expand : true, flatten : true, cwd : 'lib/angular/', src : '*.js*', dest : 'client/js/vendor/' }
                 ]
             }
         },
@@ -43,7 +43,7 @@ module.exports = function (grunt) {
             all : {
                 options : {
                     ignores : [
-                        'client/scripts/vendor/**/*.js'
+                        'client/js/vendor/**/*.js'
                     ]
                 },
                 src : [
@@ -74,13 +74,13 @@ module.exports = function (grunt) {
             },
             dev : {
                 options: {
-                    configFile: "protractor.conf.dev.js", // Target-specific config file
+                    configFile: 'protractor.conf.dev.js"', // Target-specific config file
                     args: {}
                 }
             },
             ci: {
                 options : {
-                    configFile : "protractor.conf.js", // Target-specific config file
+                    configFile : 'protractor.conf.js', // Target-specific config file
                     args : {}
                 }
             }

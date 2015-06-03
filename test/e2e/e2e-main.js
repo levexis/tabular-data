@@ -1,26 +1,23 @@
-var chai = require('chai' ),
-    chaiAsPromised = require('chai-as-promised' ),
-    MenuPage = require('./pages/menu-page' ),
-    MainPage = require('./pages/main-page' ),
-    HomePage = require('./pages/home-page' ),
-    ContentPage = require('./pages/content-page' ),
-    fs = require ('fs' ),
+var chai = require( 'chai' ),
+    chaiAsPromised = require( 'chai-as-promised' ),
+    MainPage = require( './pages/main-page' ),
+    fs = require( 'fs' ),
     ARTIFACT_DIR = process.env['ARTIFACT_DIR'] || process.env['CIRCLE_ARTIFACTS'],
-    Q = require('q');
+    Q = require( 'q' );
 
-chai.use(chaiAsPromised);
+chai.use( chaiAsPromised );
 var expect = chai.expect,
     should = chai.should();
 
 // should we set the API url here? Maybe configure the factory?
-logIt = function (message) {
-    console.trace(message);
+logIt = function ( message ) {
+    console.trace( message );
 };
-browser.driver.manage().window().setSize(800, 600);
+//browser.driver.manage().window().setSize(800, 600);
 
 // takes a screenshot, optional filename and next
 // returns promise resolved on screenshot
-function takeScreenshot (filename, next) {
+function takeScreenshot( filename, next ) {
     if ( ARTIFACT_DIR ) {
         filename = ARTIFACT_DIR + '/' + filename;
         var deferred = new Q.defer();
@@ -46,79 +43,132 @@ if ( process.env['ARTIFACT_DIR'] ) {
         if ( e.code != 'EEXIST' ) throw e;
     }
 }
-describe('e2e', function () {
-    describe ('Page Objects', function() {
-        var menu,main,deferred;
+describe( 'e2e', function () {
+    describe( 'Page Objects', function () {
+        var menu, main, deferred;
         beforeEach( function () {
             // don't you just love opensource, fix to protractor phantomjs bug https://github.com/angular/protractor/issues/686
             browser.ignoreSynchronization = true;
             main = new MainPage();
-            menu = new MenuPage();
             deferred = Q.defer();
             return main.get();
         } );
         afterEach( function () {
             browser.ignoreSynchronization = false;
-            return takeScreenshot('test_' + new Date().getTime() );
+            return takeScreenshot( 'test_' + new Date().getTime() );
         } );
-        /*
-        it( 'should create a valid menu', function () {
-            menu.get();
+        it( 'should display a blank form without a table', function () {
             return Q.all([
-                expect( menu.list.count() ).to.eventually.equal( 4 ),
-                expect( menu.list.get( 0 ).getText() ).to.eventually.contain( 'Medit8' ),
-                expect( menu.getHome().getText() ).to.eventually.contain( 'Medit8' ),
-                expect( menu.getOrg().getText() ).to.eventually.contain( 'Organizations' ),
-                expect( menu.getCourse().getText() ).to.eventually.equal( '' ),
-                expect( menu.getModule().getText() ).to.eventually.equal( '' ),
-                expect( menu.getList() ).to.eventually.have.length( 4 )])
+                expect( main.getHeading().getInnerHtml() ).to.eventually.equal( 'Tabular Data Example' ),
+                expect( main.getTable().isDisplayed() ).to.eventually.be.false,
+                expect( main.getAdd().isEnabled() ).to.eventually.be.false
+            ]);
         } );
-/*
-        it( 'should navigate using navTo Macro', function () {
-            return expect( main.navTo( { organizations : 'surrey', courses : 'meditation' } ) )
-                .to.eventually.contain( 'modules' )
+        it ( 'should be able to get the date boxes', function () {
+            expect( main.getDay().getText() ).to.eventually.be.falsy;
         });
-         */
 
-    });
-    describe ('Stories', function() {
-        var menu,main,home,content,deferred,testPromise, journeys={};
-        beforeEach( function () {
-            browser.ignoreSynchronization = true;
-            main = new MainPage();
-            home = new HomePage();
-            menu = new MenuPage();
-            content = new ContentPage();
-            deferred = Q.defer();
-            testPromise = deferred.promise;
-            journeys.subscribeMeditation = function () {
-                return main.get().then( function () {
-                    main.navTo( { organizations : 'surrey', courses : 'meditation' } )
-                        .then( function () {
-                            // switch can be missing
-                            var main = new MainPage();
-                            return main.getSwitch().click();
+        describe( 'Stories', function () {
+            var main, deferred, testPromise, journeys = {},j=0;
+            beforeEach( function () {
+                browser.ignoreSynchronization = true;
+                main = new MainPage();
+                deferred = Q.defer();
+                testPromise = deferred.promise;
+            } );
+            journeys.completeForm = function (num) {
+                if ( typeof num === 'number') {
+                    j = num;
+                } else {
+                    j += 1;
+                }
+                return main.getName().sendKeys( 'name' + j ).then( function () {
+                    return main.getEmail().sendKeys( 'email' + j + '@test.me').then( function () {
+                        return main.getDay().sendKeys( j ).then( function () {
+                            return main.getMonth().sendKeys( j ).then( function () {
+                                return main.getYear().sendKeys( + j ).then( function () {
+                                    return main.getKids().sendKeys( j );
+                                } );
+                            } );
                         } );
-                } );
+                    } );
+                });
             };
+            journeys.addModel = function ( num ) {
+                return journeys.completeForm(num).then ( function () {
+                    return main.getAdd().click()
+                });
+            };
+            describe( 'main', function () {
+                beforeEach( function () {
+                    main.get();
+                } );
+                it( 'should invalidate blank fields', function () {
+                    return Q.all([
+                        expect(main.getName().getAttribute('class')).to.eventually.contain('ng-invalid'),
+                        expect(main.getDay().getAttribute('class')).to.eventually.contain('ng-invalid' ),
+                        expect(main.getMonth().getAttribute('class')).to.eventually.contain('ng-invalid' ),
+                        expect(main.getYear().getAttribute('class')).to.eventually.contain('ng-invalid' ),
+                        expect(main.getKids().getAttribute('class')).to.eventually.contain('ng-invalid' ),
+                        expect(main.getEmail().getAttribute('class')).to.eventually.contain('ng-invalid')
+                    ]);
+                } );
+                it( 'should validate correct email', function () {
+                    var email = main.getEmail();
+                    expect(email.sendKeys('test@test.com' ). then ( function () {
+                        return email.getAttribute('class'); }) ).to.eventually.contain('ng-valid');
+                } );
+                it( 'should invalidate incorrect email', function () {
+                    var email = main.getEmail();
+                    expect(email.sendKeys('test@test' ). then ( function () {
+                        return email.getAttribute('class'); }) ).to.eventually.contain('ng-valid');
+                } );
+                it( 'should require name', function () {
+                    expect(main.getName().getAttribute('class')).to.eventually.contain('ng-invalid');
+                } );
+                it( 'should disable add by default', function () {
+                    expect(main.getAdd().isEnabled() ).to.eventually.be.false;
+                } );
+                it( 'should enable add button when form validated', function () {
+                    expect (journeys.completeForm().then ( function () {
+                        return main.getAdd().isEnabled();} ) ).to.eventually.be.true;
+                });
+                it( 'should clear table once model added',function () {
+                    expect (journeys.completeForm().then ( function () {
+                        return main.getAdd().click().then( function() {
+                            // check date as this is the most complicate use case
+                            return main.getDay().getText()
+                        } )
+                    })).to.eventually.be.falsy;
+                });
+                it( 'should display table once collection started', function () {
+                    expect (journeys.addModel().then ( function () {
+                        return main.getTable().isDisplayed(); } ) ).to.eventually.be.true;
+                });
+                it( 'should change sorting when column clicked',function () {
+                    expect( journeys.addModel().then( function () {
+                        return main.getCol( 0 ).click().then( function () {
+                            return main.getSortbox().getInnerHtml();
+                        } )
+                    } ) ).to.eventually.contain( 'name Descending' );
+                });
+                it( 'should allow table to be filtered using filter input',function () {
+                    expect( journeys.addModel(10).then( function () {
+                        return journeys.addModel(11).then( function () {
+                            return main.getFilter().sendKeys('10' ).then ( function () {
+                                return main.getRows();
+                            });
+                        });
+                    }) ).to.eventually.have.length( 2 ); // rows will include the head row so expect 1 to be filtered
+                });
+                it( 'should sort alphabetically by default',function () {
+                    expect( journeys.addModel(2).then( function () {
+                        return journeys.addModel(1).then( function () {
+                            return main.getCell(0,0).getInnerHtml();
+                        });
+                    }) ).to.eventually.equal('name1');
+                });
+            } );
         } );
-        afterEach( function () {
-            browser.ignoreSynchronization = false;
-            return takeScreenshot('test_' + new Date().getTime() );
-        } );
-        /*
-        it( 'should start with an intro to the app',function() {
-            home.get();
-            expect ( home.getBlurb().getInnerHtml() ).to.eventually.contain('Welcome to Medit8');
-        });
-        it( 'should allow me to select a course from org page' ,function() {
-            main.get();
-            expect ( main.navTo ( { organizations: 'surrey', courses: 'meditation' } )
-                    .then ( function ( what ) {
-                    return main.clickOn( 'meditation' );
-                })
-            ).to.eventually.contain('guided meditations');
-        });
-        */
-    });
+    } );
 });

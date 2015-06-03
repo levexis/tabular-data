@@ -43,7 +43,8 @@
         "karma-spec-reporter": "~0.0.13",
         "mocha": "1.20.0",
         "phantomjs": "~1.9.7",
-        "protractor": "~0.20.1"
+        "protractor": "latest",
+        "q": "latest"
     },
     "devDependencies": {
         "colors": "^0.6.2",

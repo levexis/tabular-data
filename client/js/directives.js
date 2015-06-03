@@ -39,9 +39,9 @@ angular.module( 'tabData' )
                 };
                 // parser to turn date into string
             },
-            template : '<input ng-change="updateModel()" type="number" min="1" max="31" ng-model="day" placeholder="Day" required class="date-input" />' +
-                '<input ng-change="updateModel()" type="number" min="1" max="12" ng-model="month" placeholder="Month" required class="date-input" />' +
-                '<input ng-change="updateModel()" type="number" min="00" max="' + ( 1900 + new Date().getYear() ) + '" ng-model="year" placeholder="Year" required class="date-input" />'
+            template : '<input ng-change="updateModel()" type="number" min="1" max="31" ng-model="day" placeholder="Day" required class="date-input day" id="day" />' +
+                '<input ng-change="updateModel()" type="number" min="1" max="12" ng-model="month" placeholder="Month" required class="date-input month" />' +
+                '<input ng-change="updateModel()" type="number" min="00" max="' + ( 1900 + new Date().getYear() ) + '" ng-model="year" placeholder="Year" required class="date-input year" />'
         };
     } )
     .directive( 'tdTabulate', function () {
@@ -66,12 +66,12 @@ angular.module( 'tabData' )
             },
             template : function ( element, attributes ) {
                 var cols = 0,
-                    startTemplate = '<div class="tabulate" ng-show="collection.length"><label>Filter:</label><input ng-model="search" placeholder="Enter text to filter" required/><br /><table class="table"><thead><tr name="headings">',
+                    startTemplate = '<div class="tabulate" ng-show="collection.length"><label>Filter:</label><input ng-model="search" placeholder="Enter text to filter" required/><br /><table class="table"><thead><tr name="rowhead">',
                     endTemplate = '<tbody><tr ng-class-even="\'even\'" ng-repeat="row in collection | tdFilterValues:search | orderBy:sortName:desc" name="row{{$index}}">';
 
                 while ( attributes['col' + cols] && cols < 10 ) {
-                    startTemplate += '<td ng-click="clickCol(' + cols + ')" ng-class="{ \'asc\' : sort===' + cols + ' && !desc, \'desc\' :  sort===' + cols + ' && desc}">' + attributes['col' + cols ] + '</td>';
-                    endTemplate += '<td>{{ row.' + attributes['col' + cols ] + ' | tdFormatCell }}</td>';
+                    startTemplate += '<td ng-click="clickCol(' + cols + ')" ng-class="{ \'asc\' : sort===' + cols + ' && !desc, \'desc\' :  sort===' + cols + ' && desc}" name="col'+cols+'">' + attributes['col' + cols ] + '</td>';
+                    endTemplate += '<td name="col' + cols + '">{{ row.' + attributes['col' + cols ] + ' | tdFormatCell }}</td>';
                     cols += 1;
                 }
                 // only return a table if columns specified

@@ -16,11 +16,23 @@ module.exports = function (grunt) {
             install : {
             }
         },
-        karma : {
+/*        karma : {
             options : {
                 configFile : 'karma.conf.js',
                 runnerPort: 9100,
                 browsers:   ['Chrome']
+            }
+        },
+*/
+        karma: {
+            dev: {
+                configFile: 'karma.macdev.conf.js'
+            },
+            //continuous integration mode: run tests once in PhantomJS browser.
+            e2e: {
+                configFile: 'karma.conf.js',
+                singleRun: true,
+                browsers: ['PhantomJS']
             }
         },
         // note clean with / on the end as without the * removes the directory, which I see as a bug
@@ -129,7 +141,7 @@ module.exports = function (grunt) {
     ]);
 
     // test task
-    grunt.registerTask( 'test', [ 'karma' ]);
+    grunt.registerTask( 'test', [ 'karma:e2e', 'e2e' ]);
 
     // Default task.
     grunt.registerTask( 'build', ['clean', 'bower', 'copy' , 'jshint' ] );

@@ -26,10 +26,16 @@
         "grunt-contrib-connect": "~0.8.0",
         "grunt-contrib-copy": "~0.5.0",
         "grunt-contrib-jshint": "~0.8.0",
-        "grunt-karma": "~0.8.0",
         "grunt-protractor-runner": "~1.0.1",
         "grunt-selenium-webdriver": "latest",
-        "karma": "~0.12",
+        "mocha": "1.20.0",
+        "phantomjs": "~1.9.7",
+        "protractor": "~0.24.2",
+        "q": "latest"
+    },
+    "devDependencies": {
+        "grunt-karma": "latest",
+        "karma": "latest",
         "karma-chai-plugins": "^0.2.1",
         "karma-chrome-launcher": "~0.1.0",
         "karma-coverage": "~0.2.4",
@@ -41,12 +47,6 @@
         "karma-safari-launcher": "~0.1.1",
         "karma-sinon-chai": "~0.2.0",
         "karma-spec-reporter": "~0.0.13",
-        "mocha": "1.20.0",
-        "phantomjs": "~1.9.7",
-        "protractor": "latest",
-        "q": "latest"
-    },
-    "devDependencies": {
         "colors": "^0.6.2",
         "grunt-mocha-cli": "^1.6.0",
         "wd": "^0.3.8"

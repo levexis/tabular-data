@@ -1,4 +1,5 @@
 // basic Karma configuration for e2e testing use, runs once and uses phantomjs
+// use install -g karma-cli to pick up local plugins
 module.exports = function(config) {
     config.set({
 

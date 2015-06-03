@@ -1,0 +1,7 @@
+.idea/
+node_modules/
+coverage/
+bower_components/
+client/js/vendor
+test/artifacts
+

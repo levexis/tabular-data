@@ -111,6 +111,8 @@ angular.module( 'tabData' )
             } else {
                 out = [];
                 // case insensitive search of text fields
+                
+                // FEEDBACK
                 search = new RegExp( what, 'i' );
                 for ( var r = 0; r < collection.length; r++ ) {
                     row = collection [r];

@@ -12,6 +12,7 @@ describe( 'directives', function () {
             iscope = elm.find( 'td-date' ).isolateScope();
         } ) );
         it( 'should return number inputs', function () {
+            // FEEDBACK
             elm.html().should.contain( '<input' );
             elm.html().should.contain( 'type="number"' );
         } );

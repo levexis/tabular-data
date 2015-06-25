@@ -10,6 +10,8 @@ var expect = chai.expect,
     should = chai.should();
 
 // should we set the API url here? Maybe configure the factory?
+
+// FEEDBACK
 logIt = function ( message ) {
     console.trace( message );
 };

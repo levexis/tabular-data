@@ -134,6 +134,8 @@ angular.module( 'tabData' )
             return out;
         };
     } )
+    
+    // FEEDBACK
     // presents the date in d/m/yyyy
     .filter( 'tdFormatCell', function () {
         return function ( cell ) {

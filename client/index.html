@@ -1,10 +1,12 @@
-<!DOCTYPE html>
+<!-- FEEDBACK --><!DOCTYPE html>
 <html>
   <head>
     <meta charset="utf-8">
     <title>Tabular Data</title>
 
     <link href="css/app.css" rel="stylesheet">
+    
+    <!-- FEEDBACK -->
     <script src="js/vendor/angular.js"></script>
 
     <!-- your app's script -->
@@ -22,6 +24,7 @@
                 <input type="text" placeholder="Full name" ng-model="model.name" id="fullname" required />
                 <br />
                 <label for="fullname">Date of Birth: </label>
+                <!-- FEEDBACK -->
                 <td-date ng-model="model.dob"></td-date>
                 <br />
                 <!-- todo: validation will fail on ie as type email not supported -->
@@ -35,6 +38,8 @@
                 <label for="add"></label>
                 <button ng-disabled="!addForm.$valid" ng-click="addModel()" class="add-button" id="add">add</button>
             </div>
+            
+            <!-- FEEDBACK -->
             <td-tabulate collection="collection" col0="name" col1="dob" col2="email" col3="kids"></td-tabulate><!-- tabulates data and sorts by first column ascending -->
         </div>
   </body>

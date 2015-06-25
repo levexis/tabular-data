@@ -12,14 +12,17 @@ describe( 'directives', function () {
             iscope = elm.find( 'td-date' ).isolateScope();
         } ) );
         it( 'should return number inputs', function () {
+            // FEEDBACK
             elm.html().should.contain( '<input' );
             elm.html().should.contain( 'type="number"' );
         } );
         describe( 'methods', function () {
+            // FEEDBACK
             it( 'should have fullYear method', function () {
                 expect( iscope.fullYear ).to.be.a( 'function' );
             } );
             it( 'should get a number back from fullYear', function () {
+                // FEEDBACK
                 expect( iscope.fullYear( 00 ) ).to.be.a( 'number' );
             } );
             it( 'should turn 00 to 2000', function () {
@@ -70,6 +73,7 @@ describe( 'directives', function () {
             iscope = elm.find( 'td-tabulate' ).isolateScope();
         } ) );
         it( 'should populate collection with testdata', function () {
+            // FEEDBACK
             elm.html().should.contain( '<input' );
             expect( iscope.collection ).to.have.length( 2 );
         } );
@@ -79,6 +83,8 @@ describe( 'directives', function () {
         it( 'should display 2 rows', function () {
             iscope.search = undefined;
             iscope.$digest();
+            
+            // FEEDBACK
             elm.html().should.contain( 'name="row0"' );
             elm.html().should.contain( 'name="row1"' );
             elm.html().should.contain( 'three' );

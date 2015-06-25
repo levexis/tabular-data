@@ -10,11 +10,14 @@ var expect = chai.expect,
     should = chai.should();
 
 // should we set the API url here? Maybe configure the factory?
+
+// FEEDBACK
 logIt = function ( message ) {
     console.trace( message );
 };
 //browser.driver.manage().window().setSize(800, 600);
 
+// FEEDBACK
 // takes a screenshot, optional filename and next
 // returns promise resolved on screenshot
 function takeScreenshot( filename, next ) {
@@ -69,7 +72,9 @@ describe( 'e2e', function () {
         });
 
         describe( 'Stories', function () {
+            // FEEDBACK
             var main, deferred, testPromise, journeys = {},j=0;
+            
             beforeEach( function () {
                 browser.ignoreSynchronization = true;
                 main = new MainPage();

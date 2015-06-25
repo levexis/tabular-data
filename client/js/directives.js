@@ -1,4 +1,6 @@
 angular.module( 'tabData' )
+
+    // FEEDBACK
     .directive( 'tdDate', function () {
         return {
             restrict : 'E',
@@ -6,6 +8,8 @@ angular.module( 'tabData' )
             scope : {}, //isolate
             link : function ( $scope, element, attributes, ngModel ) {
                 if ( !ngModel ) return;
+                
+                // FEEDBACL
                 // converts full year, added to scope for easy testing but could be a filter.
                 $scope.fullYear = function ( year ) {
                     var thisYear, outCentury;
@@ -31,6 +35,7 @@ angular.module( 'tabData' )
                 } );
                 // todo: use viewChangeListeners to all ng-model to be set to a date
 
+                // FEEDBACK
                 $scope.updateModel = function () {
                     // set the ng-model if complete date specified
                     if ( $scope.day && $scope.month && (typeof $scope.year !== 'undefined') ) {
@@ -39,6 +44,8 @@ angular.module( 'tabData' )
                 };
                 // parser to turn date into string
             },
+            
+            // FEEDBACK
             template : '<input ng-change="updateModel()" type="number" min="1" max="31" ng-model="day" placeholder="Day" required class="date-input day" id="day" />' +
                 '<input ng-change="updateModel()" type="number" min="1" max="12" ng-model="month" placeholder="Month" required class="date-input month" />' +
                 '<input ng-change="updateModel()" type="number" min="00" max="' + ( 1900 + new Date().getYear() ) + '" ng-model="year" placeholder="Year" required class="date-input year" />'
@@ -64,11 +71,14 @@ angular.module( 'tabData' )
                     }
                 };
             },
+            // FEEDBACK
             template : function ( element, attributes ) {
                 var cols = 0,
+                    // FEEDBACK
                     startTemplate = '<div class="tabulate" ng-show="collection.length"><label>Filter:</label><input ng-model="search" placeholder="Enter text to filter" required/><br /><table class="table"><thead><tr name="rowhead">',
                     endTemplate = '<tbody><tr ng-class-even="\'even\'" ng-repeat="row in collection | tdFilterValues:search | orderBy:sortName:desc" name="row{{$index}}">';
 
+                // FEEDBACK
                 while ( attributes['col' + cols] && cols < 10 ) {
                     startTemplate += '<td ng-click="clickCol(' + cols + ')" ng-class="{ \'asc\' : sort===' + cols + ' && !desc, \'desc\' :  sort===' + cols + ' && desc}" name="col'+cols+'">' + attributes['col' + cols ] + '</td>';
                     endTemplate += '<td name="col' + cols + '">{{ row.' + attributes['col' + cols ] + ' | tdFormatCell }}</td>';
@@ -101,6 +111,8 @@ angular.module( 'tabData' )
             } else {
                 out = [];
                 // case insensitive search of text fields
+                
+                // FEEDBACK
                 search = new RegExp( what, 'i' );
                 for ( var r = 0; r < collection.length; r++ ) {
                     row = collection [r];
@@ -122,6 +134,8 @@ angular.module( 'tabData' )
             return out;
         };
     } )
+    
+    // FEEDBACK
     // presents the date in d/m/yyyy
     .filter( 'tdFormatCell', function () {
         return function ( cell ) {

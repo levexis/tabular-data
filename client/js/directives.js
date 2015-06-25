@@ -35,6 +35,7 @@ angular.module( 'tabData' )
                 } );
                 // todo: use viewChangeListeners to all ng-model to be set to a date
 
+                // FEEDBACK
                 $scope.updateModel = function () {
                     // set the ng-model if complete date specified
                     if ( $scope.day && $scope.month && (typeof $scope.year !== 'undefined') ) {

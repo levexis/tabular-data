@@ -74,6 +74,7 @@ angular.module( 'tabData' )
             // FEEDBACK
             template : function ( element, attributes ) {
                 var cols = 0,
+                    // FEEDBACK
                     startTemplate = '<div class="tabulate" ng-show="collection.length"><label>Filter:</label><input ng-model="search" placeholder="Enter text to filter" required/><br /><table class="table"><thead><tr name="rowhead">',
                     endTemplate = '<tbody><tr ng-class-even="\'even\'" ng-repeat="row in collection | tdFilterValues:search | orderBy:sortName:desc" name="row{{$index}}">';
 

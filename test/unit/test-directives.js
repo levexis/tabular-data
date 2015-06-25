@@ -22,6 +22,7 @@ describe( 'directives', function () {
                 expect( iscope.fullYear ).to.be.a( 'function' );
             } );
             it( 'should get a number back from fullYear', function () {
+                // FEEDBACK
                 expect( iscope.fullYear( 00 ) ).to.be.a( 'number' );
             } );
             it( 'should turn 00 to 2000', function () {

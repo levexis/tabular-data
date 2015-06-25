@@ -44,6 +44,8 @@ angular.module( 'tabData' )
                 };
                 // parser to turn date into string
             },
+            
+            // FEEDBACK
             template : '<input ng-change="updateModel()" type="number" min="1" max="31" ng-model="day" placeholder="Day" required class="date-input day" id="day" />' +
                 '<input ng-change="updateModel()" type="number" min="1" max="12" ng-model="month" placeholder="Month" required class="date-input month" />' +
                 '<input ng-change="updateModel()" type="number" min="00" max="' + ( 1900 + new Date().getYear() ) + '" ng-model="year" placeholder="Year" required class="date-input year" />'

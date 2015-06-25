@@ -17,6 +17,7 @@ logIt = function ( message ) {
 };
 //browser.driver.manage().window().setSize(800, 600);
 
+// FEEDBACK
 // takes a screenshot, optional filename and next
 // returns promise resolved on screenshot
 function takeScreenshot( filename, next ) {

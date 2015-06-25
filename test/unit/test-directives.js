@@ -83,6 +83,8 @@ describe( 'directives', function () {
         it( 'should display 2 rows', function () {
             iscope.search = undefined;
             iscope.$digest();
+            
+            // FEEDBACK
             elm.html().should.contain( 'name="row0"' );
             elm.html().should.contain( 'name="row1"' );
             elm.html().should.contain( 'three' );

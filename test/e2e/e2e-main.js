@@ -72,7 +72,9 @@ describe( 'e2e', function () {
         });
 
         describe( 'Stories', function () {
+            // FEEDBACK
             var main, deferred, testPromise, journeys = {},j=0;
+            
             beforeEach( function () {
                 browser.ignoreSynchronization = true;
                 main = new MainPage();

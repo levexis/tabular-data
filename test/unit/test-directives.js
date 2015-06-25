@@ -73,6 +73,7 @@ describe( 'directives', function () {
             iscope = elm.find( 'td-tabulate' ).isolateScope();
         } ) );
         it( 'should populate collection with testdata', function () {
+            // FEEDBACK
             elm.html().should.contain( '<input' );
             expect( iscope.collection ).to.have.length( 2 );
         } );

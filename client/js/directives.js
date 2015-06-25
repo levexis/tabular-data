@@ -78,6 +78,7 @@ angular.module( 'tabData' )
                     startTemplate = '<div class="tabulate" ng-show="collection.length"><label>Filter:</label><input ng-model="search" placeholder="Enter text to filter" required/><br /><table class="table"><thead><tr name="rowhead">',
                     endTemplate = '<tbody><tr ng-class-even="\'even\'" ng-repeat="row in collection | tdFilterValues:search | orderBy:sortName:desc" name="row{{$index}}">';
 
+                // FEEDBACK
                 while ( attributes['col' + cols] && cols < 10 ) {
                     startTemplate += '<td ng-click="clickCol(' + cols + ')" ng-class="{ \'asc\' : sort===' + cols + ' && !desc, \'desc\' :  sort===' + cols + ' && desc}" name="col'+cols+'">' + attributes['col' + cols ] + '</td>';
                     endTemplate += '<td name="col' + cols + '">{{ row.' + attributes['col' + cols ] + ' | tdFormatCell }}</td>';

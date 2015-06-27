@@ -9,7 +9,6 @@ var server = app.listen(3000, function (req, res, next) {
         res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
         console.log(req.query);
         if ( req.query['delay'] ) {
-            console.log ('delay',req.location,'by', req.query.delay);
             setTimeout( function () {
                 next();
             }, req.query.delay );

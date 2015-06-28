@@ -1,7 +1,9 @@
 // timer for testing script loading in browser based on where content is placed.
 // if you want to track initial start time put window.results = new Date() at start of html
 (function () {
+    var results;
     window.results = window.results || [];
+    results = window.results;
     function displayResults() {
         var out = '',
             el = document.getElementById( 'results' );
@@ -14,6 +16,6 @@
         }
         return out;
     }
-    window.results.push( new Date() );
+    results.push( new Date() );
     displayResults();
 })();

@@ -2,6 +2,7 @@ var expect = chai.expect;
 describe( 'directives', function () {
     var elm, scope, iscope;
     beforeEach( module( 'tabData' ) );
+//    beforeEach( module ('karma.templates') );
     describe( 'tdDate', function () {
         beforeEach( inject( function ( $rootScope, $compile ) {
             elm = angular.element( '<div><td-date ng-model="test.date"></td-date></div>' );
@@ -11,8 +12,9 @@ describe( 'directives', function () {
             scope.$digest();
             iscope = elm.find( 'td-date' ).isolateScope();
         } ) );
+
         it( 'should return 3 number inputs', function () {
-            expect( elm.find('input' )).to.have.length(3);
+            expect( elm.find('input')).to.have.length(3);
             angular.element (elm.find('input' )[0]).attr('type').should.equal('number');
         } );
         it('should start with blank day,month,year if model not a date',function () {
@@ -63,11 +65,11 @@ describe( 'directives', function () {
         var _compile
         beforeEach( inject( function ( $rootScope, $compile ) {
             _compile = $compile;
-            elm = angular.element( '<div><td-tabulate collection="testdata" col0="test_col" col1="next_col"></td-tabulate></div>' );
+            elm = angular.element( '<div><td-tabulate collection="testdata" col0="test_col" col1="next_col" col2="num_col" col3="date_col"></td-tabulate></div>' );
             scope = $rootScope.$new();
             scope.testdata = [
-                {test_col : 'one', next_col : 'two' } ,
-                {test_col : 'three', next_col : 'four' }
+                {test_col : 'one', next_col : 'two', num_col: 8, date_col: new Date (2001,3,7) } , // 7 april 2001
+                {test_col : 'three', next_col : 'four', num_col: 9, date_col: new Date (2001,4,6) } // 6 May 2001
             ];
             elm = $compile( elm )( scope );
             scope.$digest();
@@ -92,7 +94,7 @@ describe( 'directives', function () {
             iscope.search = 'one';
             iscope.$digest();
             expect( elm.find('tr' ) ).to.have.length(2);
-            angular.element ( elm.find('tr' )[1] ).text().should.equal('onetwo');
+            angular.element ( elm.find('tr' )[1] ).text().should.contain('onetwo');
             elm.html().should.not.contain( 'three' );
         });
         //todo: not implemented yet, need to go through full charachters and check matching as had false positives in adhoc tests of native filtering
@@ -104,7 +106,10 @@ describe( 'directives', function () {
             iscope.$digest();
             iscope.desc.should.be.ok;
             p.text().should.contain( 'test_col Descending' );
-            angular.element ( elm.find('tr' )[1] ).text().should.equal('threefour');
+            angular.element ( elm.find('tr' )[1] ).text().should.contain('threefour');
+        });
+        it('should not show rows that are match by a non text field', function() {
+
         });
         describe( 'methods', function () {
             it( 'should have clickCol method', function () {

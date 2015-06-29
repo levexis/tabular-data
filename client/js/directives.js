@@ -55,7 +55,7 @@ angular.module( 'tabData' )
             scope : { collection : '=collection' },
             link : function ( $scope, element, attributes ) {
                 var cols=0;
-                // intialise columns, required and must be continuos - eg col0, col1
+                // intialise columns, required and must be continuous - eg col0, col1
                 // have put a limit of 999 on to prevent crashing on corrupt / invalid data
                 // todo: could use the names of the first row in collection once it exists
                 $scope.colNames = [];
@@ -82,7 +82,7 @@ angular.module( 'tabData' )
         };
     } )
     // filter to allow all text values to be searched, ignores hashkey and non string fields
-    // this is because native filter only allows searching of single field or all fields
+    // this is because native filter only allows searching of single field or all field
     .filter( 'tdFilterValues', function () {
         return function ( collection, what ) {
             var out,
@@ -122,13 +122,11 @@ angular.module( 'tabData' )
             return out;
         };
     } )
-    // presents the date in d/m/yyyy
-    .filter( 'tdFormatCell', function () {
+    // this formats dates in d/m/yyyy or returns the value if not a Date
+    .filter( 'tdFormatCell', function ( dateFilter ) {
         return function ( cell ) {
             if ( cell instanceof Date ) {
-                return cell.getDate() +
-                    '/' + ( cell.getMonth() + 1 ) +
-                    '/' + (cell.getYear() + 1900);
+                return dateFilter( cell , 'd/M/yyyy');
             } else {
                 return cell;
             }

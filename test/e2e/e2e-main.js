@@ -1,53 +1,18 @@
 var chai = require( 'chai' ),
     chaiAsPromised = require( 'chai-as-promised' ),
     MainPage = require( './pages/main-page' ),
-    fs = require( 'fs' ),
-    ARTIFACT_DIR = process.env['ARTIFACT_DIR'] || process.env['CIRCLE_ARTIFACTS'],
     Q = require( 'q' );
 
 chai.use( chaiAsPromised );
 var expect = chai.expect,
     should = chai.should();
 
-// should we set the API url here? Maybe configure the factory?
-logIt = function ( message ) {
-    console.trace( message );
-};
-//browser.driver.manage().window().setSize(800, 600);
-
-// takes a screenshot, optional filename and next
-// returns promise resolved on screenshot
-function takeScreenshot( filename, next ) {
-    if ( ARTIFACT_DIR ) {
-        filename = ARTIFACT_DIR + '/' + filename;
-        var deferred = new Q.defer();
-        browser.takeScreenshot().then( function ( img ) {
-            console.log( 'see [' + filename + '] for screenshot' );
-            fs.writeFileSync( filename, new Buffer( img, 'base64' ) );
-            if ( typeof next === 'function' ) {
-                next( 'filename' );
-                // promise
-            } else if ( typeof next === 'object' && typeof next.resolve === 'function' ) {
-                next.resolve( filename );
-            }
-            deferred.resolve();
-        } );
-        return deferred.promise;
-    }
-}
-// make the directory for screentshot if local, if ci remaking this will destroy link to artifacts
-if ( process.env['ARTIFACT_DIR'] ) {
-    try {
-        fs.mkdirSync( ARTIFACT_DIR );
-    } catch ( e ) {
-        if ( e.code != 'EEXIST' ) throw e;
-    }
-}
 describe( 'e2e', function () {
     describe( 'Page Objects', function () {
         var menu, main, deferred;
         beforeEach( function () {
-            // don't you just love opensource, fix to protractor phantomjs bug https://github.com/angular/protractor/issues/686
+            //fix to protractor phantomjs bug https://github.com/angular/protractor/issues/686
+            //may now be superfluous
             browser.ignoreSynchronization = true;
             main = new MainPage();
             deferred = Q.defer();

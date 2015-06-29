@@ -32,7 +32,7 @@ angular.module( 'tabData' )
                         $scope.day = $scope.month = $scope.year = undefined;
                     }
                 } );
-                // todo: use viewChangeListeners to all ng-model to be set to a date
+                // todo: set day, month, year if ng model set to a date using viewChangeListeners
 
                 $scope.updateModel = function () {
                     // set the ng-model if complete date specified
@@ -54,6 +54,15 @@ angular.module( 'tabData' )
             restrict : 'E',
             scope : { collection : '=collection' },
             link : function ( $scope, element, attributes ) {
+                var cols=0;
+                // intialise columns, required and must be continuos - eg col0, col1
+                // have put a limit of 999 on to prevent crashing on corrupt / invalid data
+                // todo: could use the names of the first row in collection once it exists
+                $scope.colNames = [];
+                while ( attributes['col' + cols] && cols < 999 ) {
+                    $scope.colNames.push ( attributes['col' + cols] );
+                    cols++;
+                }
                 // sort ascending on first column to begin with
                 $scope.desc = false;
                 $scope.sortName = attributes['col0'];
@@ -69,27 +78,7 @@ angular.module( 'tabData' )
                     }
                 };
             },
-            template : function ( element, attributes ) {
-                var cols = 0,
-                    startTemplate = '<div class="tabulate" ng-show="collection.length"><label>Filter:</label><input ng-model="search" placeholder="Enter text to filter" required/><br /><table class="table"><thead><tr name="rowhead">',
-                    endTemplate = '<tbody><tr ng-class-even="\'even\'" ng-repeat="row in collection | tdFilterValues:search | orderBy:sortName:desc" name="row{{$index}}">';
-                // have put a limit of 999 on to prevent crashing on corrupt / invalid data
-                while ( attributes['col' + cols] && cols < 999 ) {
-                    startTemplate += '<td ng-click="clickCol(' + cols + ')" ng-class="{ \'asc\' : sort===' + cols + ' && !desc, \'desc\' :  sort===' + cols + ' && desc}" name="col'+cols+'">' + attributes['col' + cols ] + '</td>';
-                    endTemplate += '<td name="col' + cols + '">{{ row.' + attributes['col' + cols ] + ' | tdFormatCell }}</td>';
-                    cols += 1;
-                }
-                // only return a table if columns specified
-                if ( cols ) {
-                    startTemplate += '</tr></thead>';
-                    endTemplate += '</tr></tbody></table><p class="sort">Table sorted by: <span>{{sortName}} {{desc ? "Descending" : "Ascending"}}</span></p></div>';
-                    return startTemplate + endTemplate;
-                } else {
-                    // columns need to be specified, allows for ordering to be set and key columns to be hidden
-                    // could make them optional and then use the columns from the first row of the collection, if collection is not empty
-                    return 'col0 required for tabulate';
-                }
-            }
+            templateUrl: 'tpl/td-tabulate.html'
         };
     } )
     // filter to allow all text values to be searched, ignores hashkey and non string fields
@@ -110,13 +99,16 @@ angular.module( 'tabData' )
                 out = [];
                 // case insensitive search of text fields
                 search = new RegExp( what, 'i' );
+                // r = row index
                 for ( var r = 0; r < collection.length; r++ ) {
                     row = collection [r];
                     keys = Object.keys( row );
+                    // i= key index
                     i = 0;
                     found = false;
                     // appending matching rows to out and check next
                     while ( !found && i < keys.length ) {
+                        // do not search angular internals or text fields
                         if ( keys[i].substr( 0, 1 ) !== '$' &&
                             typeof row[ keys[i] ] === 'string' &&
                             search.test( row[ keys[i] ] ) ) {

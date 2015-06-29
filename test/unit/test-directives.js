@@ -68,7 +68,7 @@ describe( 'directives', function () {
             elm = angular.element( '<div><td-tabulate collection="testdata" col0="test_col" col1="next_col" col2="num_col" col3="date_col"></td-tabulate></div>' );
             scope = $rootScope.$new();
             scope.testdata = [
-                {test_col : 'one', next_col : 'two', num_col: 8, date_col: new Date (2001,3,7) } , // 7 april 2001
+                {test_col : 'one', next_col : 'two', num_col: 8, date_col: new Date (2001,3,7) } , // 7 April 2001
                 {test_col : 'three', next_col : 'four', num_col: 9, date_col: new Date (2001,4,6) } // 6 May 2001
             ];
             elm = $compile( elm )( scope );
@@ -85,8 +85,8 @@ describe( 'directives', function () {
             iscope.search = undefined;
             iscope.$digest();
             expect( elm.find('tr' ) ).to.have.length(3);
-            angular.element (elm.find('tr' )[1]).attr('name' ).should.equal('row0');
-            angular.element (elm.find('tr' )[2]).attr('name' ).should.equal('row1');
+            angular.element (elm.find('tr' )[1]).attr( 'name' ).should.equal('row0');
+            angular.element (elm.find('tr' )[2]).attr( 'name' ).should.equal('row1');
             angular.element( angular.element (elm.find('tr' )[2]).find('td')[0] ).text().should.equal('three');
             elm.html().should.not.contain( 'row2' );
         });
@@ -97,8 +97,19 @@ describe( 'directives', function () {
             angular.element ( elm.find('tr' )[1] ).text().should.contain('onetwo');
             elm.html().should.not.contain( 'three' );
         });
-        //todo: not implemented yet, need to go through full charachters and check matching as had false positives in adhoc tests of native filtering
-        it('should only filter text columns for valid characters');
+        it('should only filter text columns for valid characters', function () {
+            // using basic search filter would match numeric fields and would search the date conversted to dd-mmm-yyyy format, this means things
+            iscope.search = 'a';
+            iscope.$digest();
+            expect( elm.find('tr' ) ).to.have.length(1);
+            iscope.search = '0';
+            iscope.$digest();
+            expect( elm.find('tr' ) ).to.have.length(1);
+            // should searhc number fields either
+            iscope.search = '8';
+            iscope.$digest();
+            expect( elm.find('tr' ) ).to.have.length(1);
+        });
         it( 'should show order and direction',function () {
             var p = elm.find('p');
             p.text().should.contain( 'test_col Ascending' );

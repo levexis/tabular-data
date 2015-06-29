@@ -70,33 +70,37 @@ describe( 'directives', function () {
             iscope = elm.find( 'td-tabulate' ).isolateScope();
         } ) );
         it( 'should populate collection with testdata', function () {
-            elm.html().should.contain( '<input' );
             expect( iscope.collection ).to.have.length( 2 );
         } );
         it( 'should have a filter box', function () {
-            elm.html().should.contain( '<input' );
+            expect( elm.find('input' ) ).to.have.length(1);
         } );
         it( 'should display 2 rows', function () {
             iscope.search = undefined;
             iscope.$digest();
-            elm.html().should.contain( 'name="row0"' );
-            elm.html().should.contain( 'name="row1"' );
-            elm.html().should.contain( 'three' );
-            elm.html().should.not.contain( 'name="row2"' );
+            expect( elm.find('tr' ) ).to.have.length(3);
+            angular.element (elm.find('tr' )[1]).attr('name' ).should.equal('row0');
+            angular.element (elm.find('tr' )[2]).attr('name' ).should.equal('row1');
+            angular.element( angular.element (elm.find('tr' )[2]).find('td')[0] ).text().should.equal('three');
+            elm.html().should.not.contain( 'row2' );
         });
         it( 'should filter on search value',function () {
             iscope.search = 'one';
             iscope.$digest();
-            elm.html().should.contain( 'name="row0"' );
-            elm.html().should.not.contain( 'name="row1"' );
+            expect( elm.find('tr' ) ).to.have.length(2);
+            angular.element ( elm.find('tr' )[1] ).text().should.equal('onetwo');
             elm.html().should.not.contain( 'three' );
         });
+        //todo: not implemented yet, need to go through full charachters and check matching as had false positives in adhoc tests of native filtering
+        it('should only filter text columns for valid characters');
         it( 'should show order and direction',function () {
             var p = elm.find('p');
-            p.html().should.contain( 'test_col Ascending' );
+            p.text().should.contain( 'test_col Ascending' );
             iscope.clickCol(0);
             iscope.$digest();
-            p.html().should.contain( 'test_col Descending' );
+            iscope.desc.should.be.ok;
+            p.text().should.contain( 'test_col Descending' );
+            angular.element ( elm.find('tr' )[1] ).text().should.equal('threefour');
         });
         describe( 'methods', function () {
             it( 'should have clickCol method', function () {

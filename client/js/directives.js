@@ -37,7 +37,6 @@ angular.module( 'tabData' )
                         ngModel.$setViewValue( new Date( $scope.fullYear( $scope.year ), $scope.month - 1, $scope.day ) );
                     }
                 };
-                // parser to turn date into string
             },
             template : '<input ng-change="updateModel()" type="number" min="1" max="31" ng-model="day" placeholder="Day" required class="date-input day" id="day" />' +
                 '<input ng-change="updateModel()" type="number" min="1" max="12" ng-model="month" placeholder="Month" required class="date-input month" />' +
@@ -68,8 +67,8 @@ angular.module( 'tabData' )
                 var cols = 0,
                     startTemplate = '<div class="tabulate" ng-show="collection.length"><label>Filter:</label><input ng-model="search" placeholder="Enter text to filter" required/><br /><table class="table"><thead><tr name="rowhead">',
                     endTemplate = '<tbody><tr ng-class-even="\'even\'" ng-repeat="row in collection | tdFilterValues:search | orderBy:sortName:desc" name="row{{$index}}">';
-
-                while ( attributes['col' + cols] && cols < 10 ) {
+                // have put a limit of 999 on to prevent crashing 
+                while ( attributes['col' + cols] && cols < 999 ) {
                     startTemplate += '<td ng-click="clickCol(' + cols + ')" ng-class="{ \'asc\' : sort===' + cols + ' && !desc, \'desc\' :  sort===' + cols + ' && desc}" name="col'+cols+'">' + attributes['col' + cols ] + '</td>';
                     endTemplate += '<td name="col' + cols + '">{{ row.' + attributes['col' + cols ] + ' | tdFormatCell }}</td>';
                     cols += 1;
@@ -86,6 +85,7 @@ angular.module( 'tabData' )
         };
     } )
     // filter to allow all text values to be searched, ignores hashkey and non string fields
+    // this is because native filter only allows searching of single field or all fields
     .filter( 'tdFilterValues', function () {
         return function ( collection, what ) {
             var out,

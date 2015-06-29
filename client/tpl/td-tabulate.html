@@ -10,7 +10,7 @@
        </thead>
        <tbody>
             <tr ng-repeat="row in collection | tdFilterValues:search | orderBy:sortName:desc" ng-class-even="'even'" name="row{{$index}}">
-                <td ng-repeat="col in colNames" name="col{{col}}">{{ row[ col ] | tdFormatCell }}</td>
+                <td ng-repeat="col in colNames" name="col{{$index}}">{{ row[ col ] | tdFormatCell }}</td>
             </tr>
         </tbody>
     </table>

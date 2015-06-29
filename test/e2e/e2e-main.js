@@ -1,6 +1,7 @@
 var chai = require( 'chai' ),
     chaiAsPromised = require( 'chai-as-promised' ),
     MainPage = require( './pages/main-page' ),
+    tutils = require('./lib/e2e-utils'),
     Q = require( 'q' );
 
 chai.use( chaiAsPromised );
@@ -20,8 +21,9 @@ describe( 'e2e', function () {
         } );
         afterEach( function () {
             browser.ignoreSynchronization = false;
-            return takeScreenshot( 'test_' + new Date().getTime() );
+            return tutils.takeScreenshot( 'test_' + new Date().getTime() );
         } );
+
         it( 'should display a blank form without a table', function () {
             return Q.all([
                 expect( main.getHeading().getInnerHtml() ).to.eventually.equal( 'Tabular Data Example' ),
@@ -34,13 +36,7 @@ describe( 'e2e', function () {
         });
 
         describe( 'Stories', function () {
-            var main, deferred, testPromise, journeys = {},j=0;
-            beforeEach( function () {
-                browser.ignoreSynchronization = true;
-                main = new MainPage();
-                deferred = Q.defer();
-                testPromise = deferred.promise;
-            } );
+            var  journeys = {},j=0;
             journeys.completeForm = function (num) {
                 if ( typeof num === 'number') {
                     j = num;
@@ -65,9 +61,6 @@ describe( 'e2e', function () {
                 });
             };
             describe( 'main', function () {
-                beforeEach( function () {
-                    main.get();
-                } );
                 it( 'should invalidate blank fields', function () {
                     return Q.all([
                         expect(main.getName().getAttribute('class')).to.eventually.contain('ng-invalid'),

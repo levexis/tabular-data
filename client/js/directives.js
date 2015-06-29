@@ -5,6 +5,9 @@ angular.module( 'tabData' )
             require : '?ngModel',
             scope : {}, //isolate
             link : function ( $scope, element, attributes, ngModel ) {
+                // set this year as the maximum year allowed if not set on attributes
+                $scope.maxYear = attributes.maxYear || ( 1900 + new Date().getYear() );
+                // ngModel is a required attribute
                 if ( !ngModel ) return;
                 // converts full year, added to scope for easy testing but could be a filter.
                 $scope.fullYear = function ( year ) {
@@ -38,11 +41,14 @@ angular.module( 'tabData' )
                     }
                 };
             },
-            template : '<input ng-change="updateModel()" type="number" min="1" max="31" ng-model="day" placeholder="Day" required class="date-input day" id="day" />' +
-                '<input ng-change="updateModel()" type="number" min="1" max="12" ng-model="month" placeholder="Month" required class="date-input month" />' +
-                '<input ng-change="updateModel()" type="number" min="00" max="' + ( 1900 + new Date().getYear() ) + '" ng-model="year" placeholder="Year" required class="date-input year" />'
+            templateUrl : 'tpl/td-date.html'
         };
     } )
+    /*
+     * tdTabulate
+     * creates a sortable table of required cols chosen in collection
+     * required collection and col0,col1...col[n]
+     */
     .directive( 'tdTabulate', function () {
         return {
             restrict : 'E',
@@ -67,7 +73,7 @@ angular.module( 'tabData' )
                 var cols = 0,
                     startTemplate = '<div class="tabulate" ng-show="collection.length"><label>Filter:</label><input ng-model="search" placeholder="Enter text to filter" required/><br /><table class="table"><thead><tr name="rowhead">',
                     endTemplate = '<tbody><tr ng-class-even="\'even\'" ng-repeat="row in collection | tdFilterValues:search | orderBy:sortName:desc" name="row{{$index}}">';
-                // have put a limit of 999 on to prevent crashing 
+                // have put a limit of 999 on to prevent crashing on corrupt / invalid data
                 while ( attributes['col' + cols] && cols < 999 ) {
                     startTemplate += '<td ng-click="clickCol(' + cols + ')" ng-class="{ \'asc\' : sort===' + cols + ' && !desc, \'desc\' :  sort===' + cols + ' && desc}" name="col'+cols+'">' + attributes['col' + cols ] + '</td>';
                     endTemplate += '<td name="col' + cols + '">{{ row.' + attributes['col' + cols ] + ' | tdFormatCell }}</td>';
@@ -79,6 +85,8 @@ angular.module( 'tabData' )
                     endTemplate += '</tr></tbody></table><p class="sort">Table sorted by: <span>{{sortName}} {{desc ? "Descending" : "Ascending"}}</span></p></div>';
                     return startTemplate + endTemplate;
                 } else {
+                    // columns need to be specified, allows for ordering to be set and key columns to be hidden
+                    // could make them optional and then use the columns from the first row of the collection, if collection is not empty
                     return 'col0 required for tabulate';
                 }
             }

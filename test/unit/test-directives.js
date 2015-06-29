@@ -11,10 +11,32 @@ describe( 'directives', function () {
             scope.$digest();
             iscope = elm.find( 'td-date' ).isolateScope();
         } ) );
-        it( 'should return number inputs', function () {
-            elm.html().should.contain( '<input' );
-            elm.html().should.contain( 'type="number"' );
+        it( 'should return 3 number inputs', function () {
+            expect( elm.find('input' )).to.have.length(3);
+            angular.element (elm.find('input' )[0]).attr('type').should.equal('number');
         } );
+        it('should start with blank day,month,year if model not a date',function () {
+            expect( iscope.day).to.be.undefined;
+            expect( iscope.month).to.be.undefined;
+            expect( iscope.year).to.be.undefined;
+        } );
+        it('should initialize day,month,year if model set to a date');//todo: not implemented yet
+
+        it('should set model when all inputs validated', function() { iscope.day = iscope.month = iscope.year =1;
+            iscope.day = iscope.month = iscope.year =1;
+            iscope.updateModel();
+            expect( scope.test.date).to.deep.equal( new Date (2001,0,1) ) ;
+        });
+        it('should reset day,month,year when model is reset',function () {
+            iscope.day = iscope.month = iscope.year =1;
+            iscope.updateModel();
+            scope.test.date=undefined;
+            scope.$digest();
+            expect( iscope.day).to.be.undefined;
+            expect( iscope.month).to.be.undefined;
+            expect( iscope.year).to.be.undefined;
+        } );
+        it('should not set model / validate for 30/2/15 etc');//todo: not implemented yet
         describe( 'methods', function () {
             it( 'should have fullYear method', function () {
                 expect( iscope.fullYear ).to.be.a( 'function' );
@@ -35,24 +57,6 @@ describe( 'directives', function () {
                 expect( iscope.fullYear( new Date().getYear() + 1900 - 2000 ) ).to.equal( new Date().getYear() + 1900 );
                 expect( iscope.fullYear( new Date().getYear() + 1900 - 2000 + 1 ) ).to.equal( new Date().getYear() + 1900 - 99 );
             } );
-            it('should start with blank day,month,year',function () {
-                expect( iscope.day).to.be.undefined;
-                expect( iscope.month).to.be.undefined;
-                expect( iscope.year).to.be.undefined;
-            } );
-            it('should reset day,month,year when model is reset',function () {
-                iscope.day = iscope.month = iscope.year =1;
-                iscope.updateModel();
-                expect( scope.test.date).to.deep.equal( new Date (2001,0,1) ) ;
-                scope.test.date=undefined;
-                scope.$digest();
-                expect( iscope.day).to.be.undefined;
-                expect( iscope.month).to.be.undefined;
-                expect( iscope.year).to.be.undefined;
-            } );
-
-            it('should set day,month,year if model set to a date');//todo: not implemented yet
-
         } );
     } );
     describe( 'tdTabulate', function () {

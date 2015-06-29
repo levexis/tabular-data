@@ -34,8 +34,13 @@ module.exports = function(config) {
 
         // test results reporter to use
         // possible values: 'dots', 'progress', 'junit', 'growl', 'coverage'
-        reporters: ['spec','progress'], // need to install spec using
+        reporters: ['spec','progress'],//,'html'], // need to install spec using,
 
+/*        // added html reporter add html if you need it
+        htmlReporter: {
+            outputFile: 'test/report.html'
+        },
+*/
         // web server port
         port: 9876,
 

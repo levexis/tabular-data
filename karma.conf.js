@@ -13,7 +13,8 @@ module.exports = function(config) {
             'lib/angular/angular.js',
             'client/js/**/*.js',
             'lib/angular-mocks/angular-mocks.js',
-            'test/unit/**/*.js'
+            'test/unit/**/*.js',
+            'client/tpl/*.html'
         ],
 
         exclude: [
@@ -35,7 +36,7 @@ module.exports = function(config) {
         colors: true,
 
         // possible values: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG
-        logLevel: config.LOG_DEBUG,
+        logLevel: config.LOG_ERROR,
 
         autoWatch: false,
 
@@ -56,9 +57,14 @@ module.exports = function(config) {
         singleRun: true,
 
         preprocessors : {
-            '**/client/js/*.js' : 'coverage'
+            '**/client/js/*.js' : 'coverage',
+            'client/tpl/*.html' : ['ng-html2js']
         },
-
+        ngHtml2JsPreprocessor: {
+            // the name of the Angular module to create
+            stripPrefix: "client/",
+            moduleName: "tabData"
+        },
         htmlReporter: {
             outputFile: 'test/report.html'
         },
@@ -79,7 +85,8 @@ module.exports = function(config) {
         'karma-ie-launcher',
         'karma-htmlfile-reporter',
         'karma-coverage',
-        'karma-spec-reporter'
+        'karma-spec-reporter',
+        'karma-ng-html2js-preprocessor'
     ]
 
     });

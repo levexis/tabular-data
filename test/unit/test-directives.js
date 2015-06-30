@@ -38,7 +38,6 @@ describe( 'directives', function () {
             expect( iscope.month).to.be.undefined;
             expect( iscope.year).to.be.undefined;
         } );
-        it('should not set model / validate for 30/2/15 etc');//todo: not implemented yet
         describe( 'methods', function () {
             it( 'should have fullYear method', function () {
                 expect( iscope.fullYear ).to.be.a( 'function' );
@@ -59,6 +58,14 @@ describe( 'directives', function () {
                 expect( iscope.fullYear( new Date().getYear() + 1900 - 2000 ) ).to.equal( new Date().getYear() + 1900 );
                 expect( iscope.fullYear( new Date().getYear() + 1900 - 2000 + 1 ) ).to.equal( new Date().getYear() + 1900 - 99 );
             } );
+            it('should not set model / validate for 30/2/15 etc', function () {
+                iscope.day = 29;
+                iscope.month = 2;
+                iscope.year = 2011;
+                iscope.updateModel().should.not.be.ok;
+                iscope.year = 2012;
+                iscope.updateModel().should.be.ok;
+            });
         } );
     } );
     describe( 'tdTabulate', function () {
@@ -177,13 +184,13 @@ describe( 'filters', function () {
                 filter = $injector.get( '$filter' )( 'tdFormatCell' );
             } );
         } );
-        it( 'should not change a text field', function () {
+        it( 'should not modify a text field', function () {
             expect( filter( 'hello' ) ).to.equal( 'hello' );
         } );
-        it( 'should not change a number field', function () {
+        it( 'should not modify a number field', function () {
             expect( filter( 3 ) ).to.equal( 3 );
         } );
-        it( 'should format a date', function () {
+        it( 'should format a date d/M/yyyy', function () {
             expect( filter( new Date( 2015, 05, 02 ) ) ).to.equal( '2/6/2015' );
         } );
     } );

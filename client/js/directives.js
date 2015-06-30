@@ -1,4 +1,5 @@
 angular.module( 'tabData' )
+    // tdDate, simple date control that allows dates to be typed, works with ie and firefox which don't support date inputs
     .directive( 'tdDate', function () {
         return {
             restrict : 'E',
@@ -32,12 +33,42 @@ angular.module( 'tabData' )
                         $scope.day = $scope.month = $scope.year = undefined;
                     }
                 } );
-                // todo: set day, month, year if ng model set to a date using viewChangeListeners
-
+                // todo: set intial day, month, year inputs if ng model set to a date using viewChangeListeners
+                // validates the inputs and sets the ngModel if a validate date, otherwise returns false
                 $scope.updateModel = function () {
+                    var newDate;
+                    // checks day, month, year is a real date, eg 29/2/2015 no 29/2/2016 yes.
+                    function validDate( newDate ) {
+                        if (  newDate.getDate() ==  $scope.day
+                            && ( newDate.getMonth() + 1 ) ==  $scope.month
+                            && ( newDate.getYear() + 1900) == $scope.fullYear( $scope.year ) ) {
+                            ngModel.$setValidity('tdDate',true);
+                            // set valid class just in case has been removed as control will not trigger a state change event in sub input
+                            angular.element(element.find('input')[0]).addClass('ng-valid');
+                            angular.element(element.find('input')[1]).addClass('ng-valid');
+                            return true;
+                        } else {
+                            // date is invalid, prevent form submission - really should use a custom directive for the inputs and then expose their ngModel to parent scope
+                            // but better still use an off the shelf date control that works cross browser
+                            ngModel.$setValidity('tdDate',false);
+                            // set the day month as invalid
+                            angular.element(element.find('input')[0]).removeClass('ng-valid');
+                            angular.element(element.find('input')[1]).removeClass('ng-valid');
+                            return false;
+                        }
+                    }
                     // set the ng-model if complete date specified
                     if ( $scope.day && $scope.month && (typeof $scope.year !== 'undefined') ) {
-                        ngModel.$setViewValue( new Date( $scope.fullYear( $scope.year ), $scope.month - 1, $scope.day ) );
+                        newDate = new Date( $scope.fullYear( $scope.year ), $scope.month - 1, $scope.day );
+                        // check the day month year is valid if not then invalidate the day
+                        if (  validDate( newDate ) ) {
+                            ngModel.$setViewValue( new Date( $scope.fullYear( $scope.year ), $scope.month - 1, $scope.day ) );
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    } else {
+                        return false;
                     }
                 };
             },
@@ -82,18 +113,14 @@ angular.module( 'tabData' )
         };
     } )
     // filter to allow all text values to be searched, ignores hashkey and non string fields
-    // this is because native filter only allows searching of single field or all field
+    // this is because native filter only allows searching of single field or all fields and this can
+    // lead to false matches on numbers and dates ( which it converts to the Month! )
     .filter( 'tdFilterValues', function () {
         return function ( collection, what ) {
-            var out,
-                keys,
-                search,
-                row,
-                i,
-                found;
+            var out, keys,search,row,i,found;
 
             if ( !what || !collection ) {
-                // return full collection if no criteria specifed
+                // return full collection if no criteria specified
                 out = collection;
             } else {
                 out = [];
@@ -106,23 +133,24 @@ angular.module( 'tabData' )
                     // i= key index
                     i = 0;
                     found = false;
-                    // appending matching rows to out and check next
+                    // iterate through rows and append matching rows to out and check next
                     while ( !found && i < keys.length ) {
-                        // do not search angular internals or text fields
+                        // search any string field, except those that are prepended by $ as these are angular internals
                         if ( keys[i].substr( 0, 1 ) !== '$' &&
                             typeof row[ keys[i] ] === 'string' &&
                             search.test( row[ keys[i] ] ) ) {
                             found = true;
+                            // skip to next row one you have a match as search is an or.
                             out.push( row );
                         }
-                        i += 1;
+                        i++;
                     }
                 }
             }
             return out;
         };
     } )
-    // this formats dates in d/m/yyyy or returns the value if not a Date
+    // this auto formats cells, formats dates in d/m/yyyy and leaves other types alone
     .filter( 'tdFormatCell', function ( dateFilter ) {
         return function ( cell ) {
             if ( cell instanceof Date ) {

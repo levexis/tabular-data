@@ -17,14 +17,12 @@ module.exports = function(config) {
         // frameworks to use, these need to be specified in plugins below
         frameworks: [ 'mocha', 'sinon-chai'],
 
-        // frameworks to use, these need to be specified in plugins below
-        frameworks: [ 'mocha', 'sinon-chai'],
-
         files : [
             'lib/angular/angular.js',
             'client/js/**/*.js',
             'lib/angular-mocks/angular-mocks.js',
-            'test/unit/**/*.js'
+            'test/unit/**/*.js',
+            'client/tpl/*.html'
         ],
 
         exclude: [
@@ -34,8 +32,13 @@ module.exports = function(config) {
 
         // test results reporter to use
         // possible values: 'dots', 'progress', 'junit', 'growl', 'coverage'
-        reporters: ['spec','progress'], // need to install spec using
+        reporters: ['spec','progress'],//,'html'], // need to install spec using,
 
+/*        // added html reporter add html if you need it
+        htmlReporter: {
+            outputFile: 'test/report.html'
+        },
+*/
         // web server port
         port: 9876,
 
@@ -63,6 +66,7 @@ module.exports = function(config) {
         // - IE (only Windows)
         // browsers need to be in plugins below
         browsers: [ 'Chrome' , 'Firefox', 'PhantomJS','Safari','Opera' ],
+        //browsers: [  'PhantomJS'],
 
         // If browser does not capture in given timeout [ms], kill it
         captureTimeout: 60000,
@@ -82,8 +86,18 @@ module.exports = function(config) {
             'karma-ie-launcher',
             'karma-htmlfile-reporter',
             'karma-coverage',
-            'karma-reporter-spec'
-        ]
+            'karma-spec-reporter',
+            'karma-ng-html2js-preprocessor'
+        ],
+
+        preprocessors: {
+            'client/tpl/*.html' : ['ng-html2js']
+        },
+        ngHtml2JsPreprocessor: {
+            // the name of the Angular module to create
+            stripPrefix: "client/",
+            moduleName: "tabData"
+        }
 
     });
 };

@@ -1,0 +1,20 @@
+<div class="tabulate" ng-show="collection.length">
+    <label>Filter:</label><input ng-model="search" placeholder="Enter text to filter" required/><br />
+    <table class="table">
+       <thead>
+            <tr name="rowhead">
+                <td ng-repeat="col in colNames" ng-click="clickCol($index)" ng-class="{ 'asc' : sort===$index && !desc, 'desc' :  sort===$index && desc}" name="col{{$index}}">
+                    {{col}}
+                </td>
+            </tr>
+       </thead>
+       <tbody>
+            <tr ng-repeat="row in collection | tdFilterValues:search | orderBy:sortName:desc" ng-class-even="'even'" name="row{{$index}}">
+                <td ng-repeat="col in colNames" name="col{{$index}}">{{ row[ col ] | tdFormatCell }}</td>
+            </tr>
+        </tbody>
+    </table>
+    <p class="sort">Table sorted by: <span>{{sortName}} {{desc ? "Descending" : "Ascending"}}</span></p>
+    </table>
+</div>
+<div ng-show="!colNames.length" class="td-warning">col0 attribute required and not defined</div><!-- can hide td-warning in production -->

@@ -13,9 +13,19 @@
     <h1>Pick a date</h1>
     <div>
         <form>
-            <input type="date" name="date" required>
+            <input type="date" placeholder="date" name="date" required>
+            <input type="date" placeholder="date2" name="date2" required min="2015-07-15" max="2015-07-013" data-invalid cdvalue>
             <input type="submit" value="Go">
         </form>
     </div>
 </body>
 </html>
+<script>
+// wait 1s and add a button
+setTimeout ( function () {
+    var btn = document.createElement( "BUTTON" );        // Create a <button> element
+    var t = document.createTextNode( "TEST ME" );       // Create a text node
+    btn.appendChild( t );                                // Append the text to <button>
+    document.body.appendChild( btn );
+},1000);
+</script>

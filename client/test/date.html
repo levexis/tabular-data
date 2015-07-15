@@ -13,9 +13,11 @@
     <h1>Pick a date</h1>
     <div>
         <form>
-            <input type="date" placeholder="date" name="date" required>
-            <input type="date" placeholder="date2" name="date2" required min="2015-07-15" max="2015-07-013" data-invalid cdvalue>
-            <input type="submit" value="Go">
+            <label>text</label><input type="text" id="textinput"><br/>
+            <label>date</label><input type="date" placeholder="date" name="date" required><br/>
+            <label>toggler</label><input type="checkbox" id="toggler" disabled><br/>
+            <label>select</label><select id="clicker"><option>one</option><option>two</option><option>three</option></select><br/>
+            <input type="submit" value="Go"><br/>
         </form>
     </div>
 </body>
@@ -24,7 +26,12 @@
 // wait 1s and add a button
 setTimeout ( function () {
     var btn = document.createElement( "BUTTON" );        // Create a <button> element
-    var t = document.createTextNode( "TEST ME" );       // Create a text node
+    btn.onclick = function () {
+        var el = document.getElementById('toggler' );
+        el.disabled = false;
+        el.click();
+    };
+    var t = document.createTextNode( "toggle" );       // Create a text node
     btn.appendChild( t );                                // Append the text to <button>
     document.body.appendChild( btn );
 },1000);

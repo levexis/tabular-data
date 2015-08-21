@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<script src="/js/vendor/jquery.min.js"></script>
+<script>
+    // capture load start time
+    window.results=[ new Date() ];
+    window.labels=[ 'start' ];
+    window.disableTimestrap = true;
+</script>
+<script>
+    function logEvent ( what ) {
+        return function () {
+            console.log( what, new Date(),(new Date()).getTime() );
+            timeStrap( what );
+        };
+    }
+    function appendScript(src) {
+        var head = document.getElementsByTagName( "head" )[0];
+        var js = document.createElement( "script" );
+        js.onload = logEvent ('append script');
+        js.src = src;
+        head.appendChild( js );
+    }
+    function writeScript(src) {
+        document.write('<scr' + 'ipt src="' + src + '" onload="logEvent(\'write script\')()"></scr' + 'ipt>');
+    }
+    // creates an image which will be precached
+    function cacheImage(src) {
+        var img = new image();
+        img.src = src;
+        img.width= 1;
+        img.height= 1;
+        img.onload = logEvent ('cached image');
+        return img;
+    }
+    // include the #
+    function appendImage (src, el) {
+        $(el).append('<img src="'+src+'" height="1px" width="1px" onload="logEvent(\'append img\')()">');
+    }
+
+    // bootstrap
+    window.addEventListener('load', logEvent('Window.Load') );
+    $( logEvent('Dom ready' ) );
+</script>
+<head>
+    <meta charset="utf-8">
+    <title>Blocking Test 3</title>
+    <script src="timer.js?delay=1&sync"></script>
+    <link href="blank.css?delay=1000" rel="stylesheet" type="text/css"  onload="logEvent('css onload')()" />
+</head>
+<body>
+<h1>Sync script and async script added dynamically, sync script first. css blocks sync script blocks async script</h1>
+css = 1s, script =2s
+<a id="mylink" href="#" onclick="logEvent('clicked link')()">test link</a>
+<script>writeScript('blank.js?delay=2000&sync')</script>
+<script>appendScript('blank.js?delay=2001&async')</script>
+<div id="results" style="font-size: 24pt">results</div>
+</body>
+</html>

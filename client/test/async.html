@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<script>
+    // capture load start time
+    window.results=[ new Date() ];
+</script>
+<head>
+    <meta charset="utf-8">
+    <title>Async Script</title>
+    <script src="timer.js?delay=3000" async="async"></script>
+    <script src="timer.js?delay=2000" async="async"></script>
+</head>
+ß
+<body>
+They execute in the order they load
+<div id="results" style="font-size: 42pt">results</div>
+<script src="timer.js?delay=500" async="async"></script>
+<script src="timer.js?delay=1000" async="async"></script>
+</body>
+</html>

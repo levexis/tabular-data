@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<script>
+    // capture load start time
+    // same as head.html but css instead of scripts
+    window.results=[ new Date() ];
+</script>
+<head>
+    <meta charset="utf-8">
+    <title>Body Script loading test</title>
+    <script src="timer.js?delay=500&n=1"></script>
+    <script>
+        var head = document.getElementsByTagName("head")[0];
+        var js = document.createElement("script");
+        js.src = "timer.js?delay=250&n=2";
+        head.appendChild(js);
+//        head.insertBefore(script, head.firstChild);
+    </script>
+    <script>
+        document.write('<scr' + 'ipt src="timer.js?delay=750&n=3"></scr'+'ipt>');
+/*        var head = document.getElementsByTagName("head")[0];
+        var js = document.createElement("script");
+        js.src = "timer.js?delay=750";
+        head.appendChild(js);
+        */
+    </script>
+    <script>
+        var head = document.getElementsByTagName("head")[0];
+        var js = document.createElement("script");
+        js.src = "timer.js?delay=1250&n=4";
+        head.appendChild(js);
+    </script>
+    <script>timeStrap();</script>
+</head>
+// inline script as well?
+<body>
+Sync dynamic script is loaded earlier if css is in body
+<div id="results" style="font-size: 42pt">results</div>
+<link href="../css/app.css?delay=1000&n=5" rel="stylesheet" type="text/css"/>
+<link href="../css/app.css?delay=2000&n=6" rel="stylesheet" type="text/css"/>
+<script>timeStrap();</script>
+<script async="async" src="timer.js?delay=2500&n=7"></script>
+</body>
+</html>

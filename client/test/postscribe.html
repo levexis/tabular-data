@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<script>
+    // capture load start time
+    window.results=[ new Date() ];
+</script>
+<head>
+    <meta charset="utf-8">
+    <title>PostScribe Test</title>
+    <script src="timer.js?delay=1000"></script>
+    <script src="postscribe.js"></script>
+</head>
+
+<body>
+<script>
+    function loadTags() {
+        document.write = function ( what ) {
+            postscribe('#div3',what);
+        };
+        timeStrap();
+        document.write('<scr' + 'ipt src="synctime.js"></sc' + 'ript>');
+//        postscribe('#div3', '<scr' + 'ipt src="synctime.js"></sc' + 'ript>');
+    }
+    window.addEventListener('load', loadTags );
+</script>
+<script src="synctime.js?delay=1001"></script>
+<div id="results" style="font-size: 42pt"></div>
+<div id="div1">div 1</div>
+<script src="synctime.js?delay=1002"></script>
+<div id="div2">div 2</div>
+<div id="div3"></div>
+</body>
+</html>

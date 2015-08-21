@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<script>
+    // capture load start time
+    // same as head.html but css instead of scripts
+    window.results=[ new Date() ];
+</script>
+<head>
+    <meta charset="utf-8">
+    <title>Body Script loading test</title>
+    <script src="timer.js?delay=500&n=1"></script>
+    <script>
+        var head = document.getElementsByTagName("head")[0];
+        var js = document.createElement("script");
+        js.src = "timer.js?delay=250&n=2";
+        head.appendChild(js);
+//        head.insertBefore(script, head.firstChild); no work
+    </script>
+    <script>
+        var head = document.getElementsByTagName("head")[0];
+        var js = document.createElement("script");
+        js.src = "timer.js?delay=1250&n=3";
+        head.appendChild(js);
+    </script>
+    <script>timeStrap();</script>
+    <script>document.write('<link href="../css/app.css?delay=1000&n=4" rel="stylesheet" type="text/css"/><link href="../css/app.css?delay=1000&n=5" rel="stylesheet" type="text/css"/>');</script>
+</head>
+// inline script as well?
+<body>
+Combined css into one document.write and then the css will be parallel
+<div id="results" style="font-size: 42pt">results</div>
+<script async="async" src="timer.js?delay=2500&n=6"></script>
+<script>timeStrap();</script>
+
+</body>
+</html>

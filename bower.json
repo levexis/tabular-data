@@ -8,7 +8,8 @@
     "Paul Cook <levexis@gmail.com>"
   ],
   "dependencies": {
-    "angular": "latest"
+    "angular": "latest",
+    "jquery": "latest"
   },
   "devDependencies": {
     "angular-mocks": "latest"

@@ -40,7 +40,8 @@ module.exports = function (grunt) {
         copy : {
             main : {
                 files : [
-                    {expand : true, flatten : true, cwd : 'lib/angular/', src : '*.js*', dest : 'client/js/vendor/' }
+                    {expand : true, flatten : true, cwd : 'lib/angular/', src : '*.js*', dest : 'client/js/vendor/' },
+		{expand : true, flatten : true, cwd : 'lib/jquery/dists', src : '*.js*', dest : 'client/js/vendor/' }
                 ]
             }
         },

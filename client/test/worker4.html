@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<style>
+    body {
+        font-family: tahoma, verdana, arial, sans-serif;
+        font-size: 11pt;
+    }
+    h1 {
+        color: darkred;
+        margin-left: 20px;
+    }
+    .col {
+        padding: 5px 10px;
+        float: left;
+    }
+    button {
+        height: 20px;
+        margin-left: 20px;
+        background: slategray;
+        color: white;
+    }
+</style>
+<script src="/js/vendor/jquery.min.js"></script>
+<script>
+    // capture load start time
+    window.results=[ new Date() ];
+    window.labels=[ 'start' ];
+    window.disableTimestrap = false;
+    window.perfKeys = [ 'navigationStart','unloadEventStart','unloadEventEnd','redirectStart','redirectEnd','fetchStart','domainLookupStart','domainLookupEnd','connectStart','connectEnd','secureConnectionStart','requestStart','responseStart','responseEnd','domLoading','domInteractive','domContentLoadedEventStart','domContentLoadedEventEnd','domComplete','loadEventStart','loadEventEnd' ]
+</script>
+<script>
+    // stub
+    function logEvent () {
+        return function () {};
+        // dummy
+    }
+    function checkPerformanceAPI (eventName) {
+        return function () {
+            eventName = eventName || '';
+            var out = '<div class="col"><p>' + eventName + '</p>',
+                    elapsed = new Date().getTime() - performance.timing.navigationStart ;
+
+            $.each ( window.perfKeys , function ( i, key ) {
+//                out += performance.timing[key];
+                // and elapsed time
+                if ( performance.timing[key] ) {
+                    out += performance.timing[key] - performance.timing.navigationStart;
+                }
+                out +='<br />';
+            });
+
+            try {
+                if ( performance && performance.getEntriesByType("resource") ) {
+                    out  +=  '<p>' +performance.getEntriesByType("resource" ).length + '</p>';
+                }
+            } catch (err) {
+
+            }
+            out += '<p>'+elapsed+'</p></div>';
+            $('#timings' ).append(out);
+        }
+    }
+    function doSomething(cycles, timeout) {
+        var starttime = new Date(), i = 0, elapsed = 0, a = [];
+        if ( typeof cycles === 'undefined' ) {
+            cycles = 1000000;
+        }
+        for ( i = 0; ( (!cycles || i < cycles) && (!timeout || elapsed < timeout) ) ; i++ ) {
+            elapsed = new Date().getTime() - starttime.getTime();
+            a.push( document.getElementsByTagName( 'head' ).count );
+        }
+        console.log('something took ', elapsed  );
+        return elapsed;
+    }
+    // records ticks up to window.loadComplete
+    function jsCheck ( target , increment ) {
+        var timestamp = new Date().getTime(),
+                elapsed = timestamp  - performance.timing.navigationStart,
+                second = Math.floor ( elapsed / 1000 );
+        // create an array for each second we are tracking
+        window.jsChecks[ second ] = window.jsChecks[ second ] || [];
+
+        // log only if it passes - 75% threshold
+        if ( ( timestamp-target ) / increment < .25  ) {
+            // records
+            // extended data for debugging?
+            window.jsChecks[ second ].push( { target: target, now: timestamp, elapsed: elapsed, delta: ( timestamp - target) / increment } );
+            // just target
+//            window.jsChecks[ second ].push( {target: target} );
+
+        }
+        if ( !performance.timing.loadEventEnd ) {
+            setTimeout ( function () { jsCheck ( timestamp+increment , increment ) } , increment);
+        }
+    }
+    window.jsChecks = {};
+
+    CHECK_FREQ = 50;
+    // start checking
+    jsCheck ( new Date().getTime() , CHECK_FREQ );
+
+    // bootstrap
+    window.addEventListener('load', checkPerformanceAPI('Window Load') );
+    $( checkPerformanceAPI('DOM Ready' ) );
+</script>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <title>Navigation Timing Checker</title>
+    <!-- Latest compiled and minified CSS
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/bootstrap-theme.min.css">
+    <script src="/js/vendor/bootstrap.min.js"></script> -->
+</head>
+<body>
+<h1>Web workers</h1>
+Web workers finishes executing in the background but message is not received until async js returns
+<div id="timings">
+    <div class="col" style="float: left">
+        <p>
+            Timing (ms)
+        </p>
+        <script>$.each(perfKeys, function ( i,key) {
+            document.write(key + '<br />');
+        });
+        </script>
+        <p>
+            Timed Resources
+        </p>
+        <p>
+            Current timestamp
+        </p>
+
+    </div>
+</div>
+<script>checkPerformanceAPI('Body')();</script>
+<script>
+    var w = new Worker("hardwork.js");
+    checkPerformanceAPI ('Work Started')();
+    w.onmessage = function ( message ) {
+        console.log ( 'done', message.data,message);
+        checkPerformanceAPI ('Work Done')();
+        // do I need to terminate
+        w.terminate();
+    }
+</script>
+<script src="something.js?delay=900" async="async"></script>
+</body>
+</html>

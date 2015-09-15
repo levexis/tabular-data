@@ -49,8 +49,8 @@
     <link href="blank.css?delay=1000" rel="stylesheet" type="text/css"  onload="logEvent('css onload')()" />
 </head>
 <body>
-<h1>Sync script and async script both in body. Sync script causes css and script to block</h1>
-css = 1s, script =2s
+<h1>Sync script and async script both in body. css first</h1>
+css = 1s, script =2s. link available once css loaded
 <a id="mylink" href="#" onclick="logEvent('clicked link')()">test link</a>
 <script src="blank.js?delay=2000&async" async="async" onload="logEvent('async onload')()"></script>
 <script src="blank.js?delay=2001&sync" onload="logEvent('sync onload')()"></script>

@@ -52,18 +52,25 @@
 </script>
 <head>
     <meta charset="utf-8">
-    <title>Blocking Test 9</title>
-    <script src="timer.js?delay=1&sync"></script>
-    <link href="blank.css?delay=1000" rel="stylesheet" type="text/css"  onload="logEvent('css onload')()" />
-    <script src="blank.js?delay=2001&sync" onload="logEvent('sync onload')()"></script>
+    <title>Blocking Test 10</title>
+    <script src="timer.js"></script>
+<!--    <script>addCss('blank.css?delay=1000&dynamic');</script>
+    <link href="blank.css?delay=1000&inline" rel="stylesheet" type="text/css"  onload="logEvent('css onload')()"/>
+    <link href="blank.css?delay=2000&inline2" rel="stylesheet" type="text/css"  onload="logEvent('css onload')()"/> -->
+<!--    <script>appendScript('asyncscript.js?delay=500&async')</script> -->
 </head>
 <body>
-<h1>Dynamic CSS after async script, webkit does not render until everything downloaded ( no blue )</h1>
-css = 1s, script =2s
-<a id="mylink" href="#" onclick="logEvent('clicked link')()">test link</a>
-<script>
-    // but if I click an element the screen is painted! document.getElementById('mylink').click();
-addCss('reverse.css?delay=3000');</script>
+<h1>Onload</h1>All other onloads are async onload of a sync script is synchronous, if you want an onload then put a script after it and this will be executed immediately
+<p>
+    <link href="blank.css?delay=2000&inline2" rel="stylesheet" type="text/css" />
+    <script>logEvent('after css1 script')();</script>
+    <link href="blank.css?delay=1000&reverse=500&inline2" rel="stylesheet" type="text/css"  onload="logEvent('onload css2')()" />
+</p>
+    <!--
+    <script>addCss('reverse.css?delay=1001&dynamic');</script>
+    <script>writeScript('blank.js?delay=2000&sync')</script>
+    <script src="blank.js?delay=2001&sync" onload="logEvent('sync onload')()"></script>
+    !-->
 <div id="results" style="font-size: 24pt">results</div>
 </body>
 </html>

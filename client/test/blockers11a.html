@@ -26,13 +26,21 @@
     }
     // creates an image which will be precached
     function cacheImage(src) {
-        var img = new image();
-        img.src = src;
-        img.width= 1;
-        img.height= 1;
+        var img = new Image(src);
         img.onload = logEvent ('cached image');
+        img.src = src;
         return img;
     }
+    function addCss(src) {
+        var head = document.getElementsByTagName( "head" )[0];
+        var link = document.createElement( "link" );
+        link.rel = "stylesheet";
+        link.type = "text/css";
+        link.onload = logEvent ('dynamic css');
+        link.href = src;
+        head.appendChild( link );
+    }
+
     // include the #
     function appendImage (src, el) {
         $(el).append('<img src="'+src+'" height="1px" width="1px" onload="logEvent(\'append img\')()">');
@@ -44,16 +52,23 @@
 </script>
 <head>
     <meta charset="utf-8">
-    <title>Blocking Test 4</title>
-    <script src="timer.js?delay=1&sync"></script>
-    <link href="blank.css?delay=1000" rel="stylesheet" type="text/css"  onload="logEvent('css onload')()" />
+    <title>Blocking Test 10</title>
+    <script src="timer.js"></script>
+<!--    <script>addCss('blank.css?delay=1000&dynamic');</script>
+    <link href="blank.css?delay=1000&inline" rel="stylesheet" type="text/css"  onload="logEvent('css onload')()"/>
+    <link href="blank.css?delay=2000&inline2" rel="stylesheet" type="text/css"  onload="logEvent('css onload')()"/> -->
+<!--    <script>appendScript('asyncscript.js?delay=500&async')</script> -->
 </head>
 <body>
-<h1>Sync script and async script added dynamically to body, sync script first. css blocks sync script blocks async script</h1>
-css = 1s, script =2s
-<a id="mylink" href="#" onclick="logEvent('clicked link')()">test link</a>
-<script>writeScript('blank.js?delay=2000&sync')</script>
-<script>appendScript('blank.js?delay=2001&async')</script>
+<h1>Onload</h1>All other onloads are async onload of a sync script is synchronous, if you want an onload then put a script after it and this will be executed immediately
+<p>Does not
+    <link href="blank.css?delay=2000&inline2" rel="stylesheet" type="text/css"  onload="document.write('executes async');" />
+</p>
+    <!--
+    <script>addCss('reverse.css?delay=1001&dynamic');</script>
+    <script>writeScript('blank.js?delay=2000&sync')</script>
+    <script src="blank.js?delay=2001&sync" onload="logEvent('sync onload')()"></script>
+    !-->
 <div id="results" style="font-size: 24pt">results</div>
 </body>
 </html>

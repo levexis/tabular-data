@@ -45,25 +45,45 @@
     function appendImage (src, el) {
         $(el).append('<img src="'+src+'" height="1px" width="1px" onload="logEvent(\'append img\')()">');
     }
+    function checkPerformanceAPI (eventName) {
+        return function () {
+            eventName = eventName || '';
+            var timing, attributes = '';
+            try {
+                timing = JSON.parse( JSON.stringify( performance.timing ) );
+                if ( Object.keys ( timing ) ) {
+                    eventName += ' ( performance timing attributes: ) ' + Object.keys ( timing ).length;
+                    console.log ( eventName , JSON.stringify( performance.timing ) );
+                }
+            } catch (err) {
+                console.log(err);
+            }
+            try {
+                if ( performance && performance.getEntriesByType("resource") ) {
+                    eventName +=  ' ( performance resources logged: ) ' +performance.getEntriesByType("resource" ).length;
+                }
+            } catch (err) {
+                console.log(err);
 
+            }
+            return logEvent( eventName )();
+        }
+    }
     // bootstrap
-    window.addEventListener('load', logEvent('Window.Load') );
-    $( logEvent('Dom ready' ) );
+    window.addEventListener('load', checkPerformanceAPI('Window.Load') );
+    $( checkPerformanceAPI('Dom ready' ) );
 </script>
 <head>
     <meta charset="utf-8">
-    <title>Blocking Test 9</title>
-    <script src="timer.js?delay=1&sync"></script>
-    <link href="blank.css?delay=1000" rel="stylesheet" type="text/css"  onload="logEvent('css onload')()" />
-    <script src="blank.js?delay=2001&sync" onload="logEvent('sync onload')()"></script>
+    <title>Blocking Test 10</title>
+    <script src="timer.js"></script>
+<script>checkPerformanceAPI('after timer')();</script>
+    <script src="blank.js?delay=500&sync"></script>
 </head>
 <body>
-<h1>Dynamic CSS after async script, webkit does not render until everything downloaded ( no blue )</h1>
-css = 1s, script =2s
-<a id="mylink" href="#" onclick="logEvent('clicked link')()">test link</a>
-<script>
-    // but if I click an element the screen is painted! document.getElementById('mylink').click();
-addCss('reverse.css?delay=3000');</script>
+<h1>checking availability of nav timing API different points</h1>
+loadEventEnd event not populated until after on functions executed. loadEventStart is equiv to onload event reported in my test.
 <div id="results" style="font-size: 24pt">results</div>
+<script src="blank.js?delay=1000&async" async="async"></script>
 </body>
 </html>

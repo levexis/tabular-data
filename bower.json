@@ -9,7 +9,9 @@
   ],
   "dependencies": {
     "angular": "latest",
-    "jquery": "latest"
+    "jquery": "latest",
+    "bootstrap": "latest",
+    "normalize": "latest"
   },
   "devDependencies": {
     "angular-mocks": "latest"

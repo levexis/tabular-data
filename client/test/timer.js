@@ -24,7 +24,6 @@ var timeStrap = timeStrap || function (label) {
     }
     results.push( new Date() );
     labels.push( label || '' );
-    console.log ( 'results',label,results,labels);
     displayResults();
 };
 if ( typeof window.disableTimestrap !== 'boolean' || !window.disableTimestrap ) {

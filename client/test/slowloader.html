@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<style>
+    body {
+        font-family: tahoma, verdana, arial, sans-serif;
+        font-size: 11pt;
+    }
+    h1 {
+        color: darkred;
+        margin-left: 20px;
+    }
+    .col {
+        padding: 5px 10px;
+        float: left;
+    }
+    button {
+        height: 20px;
+        margin-left: 20px;
+        background: slategray;
+        color: white;
+    }
+</style>
+<script src="/js/vendor/jquery.min.js"></script>
+<script>
+    // capture load start time
+    window.results=[ new Date() ];
+    window.labels=[ 'start' ];
+    window.disableTimestrap = true;
+    window.perfKeys = [ 'navigationStart','unloadEventStart','unloadEventEnd','redirectStart','redirectEnd','fetchStart','domainLookupStart','domainLookupEnd','connectStart','connectEnd','secureConnectionStart','requestStart','responseStart','responseEnd','domLoading','domInteractive','domContentLoadedEventStart','domContentLoadedEventEnd','domComplete','loadEventStart','loadEventEnd' ]
+</script>
+<script>
+    function checkPerformanceAPI (eventName) {
+        return function () {
+            eventName = eventName || '';
+            var out = '<div class="col"><p>' + eventName + '</p>',
+                    elapsed = new Date().getTime() - performance.timing.navigationStart,
+                    headLoaded;
+            // if head loaded marked then write it out, this is point at which css has loaded so page can start to render
+            try {
+                headLoaded = performance.getEntriesByName('headLoaded') || [];
+                headLoaded = headLoaded.length ? Math.floor( headLoaded[0].startTime ) : '';
+            } catch (err) {
+                // doesn't work with safari
+                headLoaded = '&nbsp;';
+            }
+
+            $.each ( window.perfKeys , function ( i, key ) {
+//                out += performance.timing[key];
+                // and elapsed time
+                if ( performance.timing[key] ) {
+                    out += performance.timing[key] - performance.timing.navigationStart;
+                }
+                out +='<br />';
+            });
+            out += '<p>'+headLoaded+'</p>';
+
+            try {
+                if ( performance && performance.getEntriesByType("resource") ) {
+                    out  +=  '<p>' +performance.getEntriesByType("resource" ).length + '</p>';
+                }
+            } catch (err) {
+                out  +=  '<p>&nbsp;</p>';
+            }
+            out += '<p>'+elapsed+'</p></div>';
+            $('#timings' ).append(out);
+        }
+    }
+    function doSomething(cycles, timeout) {
+        var starttime = new Date(), i = 0, elapsed = 0, a = [];
+        if ( typeof cycles === 'undefined' ) {
+            cycles = 1000000;
+        }
+        for ( i = 0; ( (!cycles || i < cycles) && (!timeout || elapsed < timeout) ) ; i++ ) {
+            elapsed = new Date().getTime() - starttime.getTime();
+            a.push( document.getElementsByTagName( 'head' ).count );
+        }
+        console.log('something took ', elapsed  );
+        return elapsed;
+    }
+
+    // bootstrap
+    window.addEventListener('load', checkPerformanceAPI('Window Load') );
+    $( checkPerformanceAPI('DOM Ready' ) );
+</script>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <title>Navigation Timing Checker</title>
+    <!-- Latest compiled and minified CSS
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/bootstrap-theme.min.css">
+    <script src="/js/vendor/bootstrap.min.js"></script> -->
+    <script>window.performance.mark('headLoaded');</script>
+</head>
+<body>
+<h1><a href="http://www.google.co.uk" alt="click me to test interactivity">Nav Timing Data</a><button onclick="checkPerformanceAPI('click')();">click me</button></h1>
+Image is blocking after 10s, this removes them 1s after window.load <div id="timings">
+    <div class="col" style="float: left">
+    <p>
+        Timing (ms)
+    </p>
+<script>$.each(perfKeys, function ( i,key) {
+    document.write(key + '<br />');
+});
+</script>
+<p>
+    Head Loaded
+</p>
+<p>
+    Timed Resources
+</p>
+<p>
+    Current timestamp
+</p>
+
+    </div>
+    </div>
+<script>checkPerformanceAPI('Body')();</script>
+<image id="blank" src="blank.png?delay=10000&async" async="async" />
+<script>
+TIMED_OUT = [];
+    $( function () {
+        setTimeout( function () {
+            // could iterate and check responseEnd for resource. Not in safari though sadly.
+            var el;
+            el = document.getElementsByTagName( 'img' )[0];
+            TIMED_OUT.push ( { el: el, src :el.src } );
+            el.src = '';
+        }, 1000 );
+    });
+    // add the images after window.load, could daisy chain them
+    window.addEventListener('load', function () {
+        $.each( TIMED_OUT , function ( index, tout ) {
+            tout.el.src = tout.src;
+        });
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<script src="/js/vendor/jquery.min.js"></script>
+<script>
+    // capture load start time
+    window.results=[ new Date() ];
+    window.labels=[ 'start' ];
+    window.disableTimestrap = true;
+</script>
+<script>
+    function logEvent ( what ) {
+        return function () {
+            console.log( what, new Date(),(new Date()).getTime() );
+            timeStrap( what );
+        };
+    }
+    function appendScript(src) {
+        var head = document.getElementsByTagName( "head" )[0];
+        var js = document.createElement( "script" );
+        js.onload = logEvent ('append script');
+        js.src = src;
+        head.appendChild( js );
+    }
+    function writeScript(src) {
+        document.write('<scr' + 'ipt src="' + src + '" onload="logEvent(\'write script\')()"></scr' + 'ipt>');
+    }
+    // creates an image which will be precached
+    function cacheImage(src) {
+        var img = new Image(src);
+        img.onload = logEvent ('cached image');
+        img.src = src;
+        return img;
+    }
+    function addCss(src) {
+        var head = document.getElementsByTagName( "head" )[0];
+        var link = document.createElement( "link" );
+        link.rel = "stylesheet";
+        link.type = "text/css";
+        link.onload = logEvent ('dynamic css');
+        link.href = src;
+        head.appendChild( link );
+    }
+
+    // include the #
+    function appendImage (src, el) {
+        $(el).append('<img src="'+src+'" height="1px" width="1px" onload="logEvent(\'append img\')()">');
+    }
+    function doSomething(cycles, timeout) {
+        var starttime = new Date(), i = 0, elapsed = 0, a = [];
+        if ( typeof cycles === 'undefined' ) {
+            cycles = 1000000;
+        }
+        for ( i = 0; ( (!cycles || i < cycles) && (!timeout || elapsed < timeout) ) ; i++ ) {
+            elapsed = new Date().getTime() - starttime.getTime();
+            a.push( document.getElementsByTagName( 'head' ).count );
+        }
+        console.log('something took ', elapsed  );
+        logEvent('finishedSomething')();
+        return elapsed;
+    }
+    // bootstrap
+    window.addEventListener('load', logEvent('Window.Load') );
+    $( logEvent('Dom ready' ) );
+</script>
+<head>
+    <meta charset="utf-8">
+    <title>Blocking Test 12</title>
+    <script src="timer.js"></script>
+<!--    <script>addCss('blank.css?delay=1000&dynamic');</script>
+    <link href="blank.css?delay=1000&inline" rel="stylesheet" type="text/css"  onload="logEvent('css onload')()"/>
+    <link href="blank.css?delay=2000&inline2" rel="stylesheet" type="text/css"  onload="logEvent('css onload')()"/> -->
+<!--    <script>appendScript('asyncscript.js?delay=500&async')</script> -->
+    <link href="blank.css?delay=500&inline" rel="stylesheet" type="text/css"  onload="logEvent('css onload')()"/>
+    <script>doSomething(false,500); cacheImage('blank.png?delay=10&finished1');</script>
+</head>
+<body>
+<h1>Sync loading / execution</h1>
+<p>0.5s download CSS, followed by inline script that takes 0.5s to exec then bottom body external script that takes 0.1s to load and 0.5s to exec. png calls show when script has executed</p>
+<div id="results" style="font-size: 24pt">results</div>
+<script src="something.js?delay=100&inline-bottombody"></script><script>cacheImage('blank.png?delay=10&finished2');</script>
+</body>
+</html>

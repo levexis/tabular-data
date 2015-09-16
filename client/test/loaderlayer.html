@@ -111,7 +111,7 @@ $(function () {
 </script>
 
 <h1>Load layer</a><button onclick="checkPerformanceAPI('click')();">click me</button></h1>
-Shows on dom complete.Body contains a 2s delayed blank sync script and a 3s delay blank async. There is a 1000ms looping script at window.load, click the button to test interactivity.
+Shows on dom complete.Body contains a 2s delayed blank sync script and a 3s delay blank async and a 3s image. There is a 1000ms looping script at window.load, click the button to test interactivity.
 <div id="timings">
     <div class="col" style="float: left">
     <p>
@@ -134,7 +134,9 @@ Shows on dom complete.Body contains a 2s delayed blank sync script and a 3s dela
     </div>
     </div>
 <script>checkPerformanceAPI('Body')();</script>
+<img src="ncc.png?delay=3000" />
 <script src="blank.js?delay=3000&sync"></script>
 <script src="blank.js?delay=4000&async" async="async"></script>
+
 </body>
 </html>

@@ -94,7 +94,7 @@
 </head>
 <body>
 <h1><a href="http://www.google.co.uk" alt="click me to test interactivity">Nav Timing Data</a><button onclick="checkPerformanceAPI('click')();">click me</button></h1>
-Image is blocking after 10s, this removes them 1s after window.load <div id="timings">
+Image is blocking for 5s, this removes slow images and retries after window.load <div id="timings">
     <div class="col" style="float: left">
     <p>
         Timing (ms)
@@ -116,7 +116,7 @@ Image is blocking after 10s, this removes them 1s after window.load <div id="tim
     </div>
     </div>
 <script>checkPerformanceAPI('Body')();</script>
-<image id="blank" src="blank.png?delay=10000&async" async="async" />
+<image id="blank" src="ncc.png?delay=5000&async" async="async" />
 <script>
 TIMED_OUT = [];
     $( function () {

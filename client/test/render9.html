@@ -61,8 +61,8 @@
     <link href="blank.css" rel="stylesheet" type="text/css"  onload="logEvent('css onload')()" />
 </head>
 <body>
-<h1>Render test</h1>
-Add 50 iframes to page at bottom body, try to get a ux response clicking <a id="mylink" href="#" onclick="logEvent('clicked link')()">test link</a>
+<h1>Render test 9</h1>
+Add 50 iframes to page at bottom body, try to get a ux response clicking <a id="mylink" href="#" onclick="this.style.color='green'; logEvent('clicked link')()">test link</a>. It goes green when click is responded to.
 <div id="results" style="font-size: 24pt">results</div>
 <script>
     for ( var i=0; i<100; i++ ) {
